@@ -27,7 +27,8 @@ extern void format(char *buf, char *fmt, ...);
 #define error(...) { printf(__VA_ARGS__); assert(0); }
 #define eq(x,y) (strcmp((x),(y))==0)
 #define debug(...) { if (isDebug) printf(__VA_ARGS__); }
-
+#define min(x,y) (((x)<(y)) ? (x) : (y))
+#define max(x,y) (((x)>(y)) ? (x) : (y))
 
 extern char isDebug;
 extern char isFlag[];

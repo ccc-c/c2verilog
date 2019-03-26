@@ -9,8 +9,6 @@ int main(int argc, char * argv[]) {
   sprintf(irFile, "%s.ix", argv[1]);
   sprintf(mFile, "%s.mx", argv[1]);
   readText(cFile, code, TMAX);
-  // lex(code);
-  // if (isDebug) lexDump();
   parse(code);
   irPass2();
   if (isDebug) irDump();

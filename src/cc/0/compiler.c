@@ -51,25 +51,6 @@ char *skipType(TokenType type) {
   }
 }
 
-// CALL(id) = (E*)
-int CALL(char *id) {
-  assert(isNext("("));
-  skip("(");
-  int e[100], ei = 0;
-  while (!isNext(")")) {
-    e[ei++] = E();
-    if (!isNext(")")) skip(",");
-  }
-  for (int i=0; i<ei; i++) {
-    irEmitArg(e[i]);
-  }
-  skip(")");
-  irEmitCall(id, ei);
-  // 這裡要再加處理程式
-  int r = nextTemp();
-  return r;
-}
-
 // F = (E) | Number | Id | CALL
 int F() {
   int f;
@@ -104,14 +85,15 @@ int EXP() {
   return E();
 }
 
-// ASSIGN(id) = '=' E
-void ASSIGN(char *id) {
+// ASSIGN = id = E
+void ASSIGN() {
+  char *id = next();
   skip("=");
   int e = EXP();
   irEmitAssignSt(id, e);
 }
 
-// while (E) STMT
+// WHILE = while (E) STMT
 void WHILE() {
   int whileBegin = nextLabel();
   int whileEnd = nextLabel();
@@ -126,21 +108,14 @@ void WHILE() {
   irEmitLabel(whileEnd);
 }
 
-// STMT = WHILE | BLOCK | CALL ; | ASSIGN ;
+// STMT = WHILE | BLOCK | ASSIGN ;
 void STMT() {
   if (isNext("while"))
     WHILE();
-  // else if (isNext("if"))
-  //   IF();
   else if (isNext("{"))
     BLOCK();
   else {
-    char *id = next();
-    if (isNext("(")) {
-      CALL(id);
-    } else {
-      ASSIGN(id);
-    }
+    ASSIGN();
     skip(";");
   }
 }

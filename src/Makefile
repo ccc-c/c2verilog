@@ -6,7 +6,7 @@ LIB = lib/util.c lib/map.c lib/strTable.c
 
 all: $(TARGET)
 
-cc0: cc/0/cc0.c cc/0/lexer.c cc/0/compiler.c cc/0/ir.c cc/0/irvm.c cc/0/ir2m.c $(LIB)
+cc0: cc/0/cc0.c cc/0/lexer.c cc/0/compiler.c ir/0/ir.c ir/0/irvm.c ir/0/ir2m.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
 as0: as/0/asm.c $(LIB)

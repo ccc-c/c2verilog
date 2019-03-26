@@ -2,8 +2,8 @@
 #define __COMPILER_H__
 
 #include "lexer.h"
-#include "ir.h"
-#include "ir2m.h"
+#include "../../ir/0/ir.h"
+#include "../../ir/0/ir2m.h"
 
 extern void parse(char *code);
 

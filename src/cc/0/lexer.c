@@ -36,11 +36,7 @@ Token lexScan() {
   }
 
   int len = p-start;
-
-  char tstr[SMAX];
-  strncpy(tstr, start, len);
-  tstr[len] = '\0';
-  t.str = stAdd(tstr);
+  t.str = stAddn(start, len);
 
   return t;
 }
