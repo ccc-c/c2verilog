@@ -5,9 +5,18 @@
 #include <limits.h>
 #include "util.h"
 
-#define stPrint(...) ({ char stTemp[SMAX]; sprintf(stTemp, __VA_ARGS__); char *p=stAdd(stTemp); p; })
+typedef struct {
+  char *text;
+  char *textEnd;
+} StrTable;
+
+extern void stNew(StrTable *st, char *text);
+extern char *stPutn(StrTable *st, char *str, int n);
+extern char *stPut(StrTable *st, char *str);
+// 以下作用在全域變數 gStrTable 上。
 extern void stInit();
 extern char *stAdd(char *str);
 extern char *stAddn(char *str, int n);
+#define stPrint(...) ({ char stTemp[SMAX]; sprintf(stTemp, __VA_ARGS__); char *p=stAdd(stTemp); p; })
 
 #endif

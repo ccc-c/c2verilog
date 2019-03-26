@@ -4,6 +4,7 @@ char *tokenTypeName[6] = {"Id", "Int", "Keyword", "Literal", "Op", "End"};
 char *p;
 
 void lexInit(char *code) {
+  stInit();
   p = code;
 }
 
