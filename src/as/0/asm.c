@@ -271,8 +271,8 @@ void pass2(string inFile, string binFile) {
 
 void assemble(string file) {
   char inFile[100], binFile[100];
-  sprintf(inFile, "%s.s0", file);
-  sprintf(binFile, "%s.o0", file);
+  sprintf(inFile, "%s.sx", file);
+  sprintf(binFile, "%s.ox", file);
   symDump(&symMap);
   pass1(inFile);
   symDump(&symMap);

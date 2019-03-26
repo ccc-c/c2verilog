@@ -1,8 +1,8 @@
 #ifndef __LEXER_H__
 #define __LEXER_H__
 
-#include "../lib/util.h"
-#include "../lib/strTable.h"
+#include "../../lib/util.h"
+#include "../../lib/strTable.h"
 
 typedef enum { Id, Int, Keyword, Literal, Op, End } TokenType;
 

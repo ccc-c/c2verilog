@@ -86,7 +86,7 @@ void run(uint16_t *im, int16_t *m, int imTop) {
 
 // run: ./vm <file.bin>
 int main(int argc, char *argv[]) {
-  argHandle(argc, argv, 2, "./vm <file.bin>\n");
+  argHandle(argc, argv, 2, "./vm <file.ox>\n");
 
   FILE *binFile = fopen(argv[1], "rb");
   int imTop = fread(im, sizeof(uint16_t), 32768, binFile);

@@ -2,8 +2,8 @@
 #define __IR_H__
 
 #include <stdio.h>
-#include "../lib/map.h"
-#include "../lib/util.h"
+#include "../../lib/map.h"
+#include "../../lib/util.h"
 
 // IR Virtual Machine
 #define trace printf

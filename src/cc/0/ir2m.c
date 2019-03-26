@@ -1,4 +1,4 @@
-#include "ir2m0.h"
+#include "ir2m.h"
 
 void ir2macro(FILE *fp, IR *p) {
   int t=p->t, t1=p->t1, t2=p->t2, label=p->label;
@@ -35,10 +35,10 @@ void ir2macro(FILE *fp, IR *p) {
   fprintf(fp, "\n");
 }
 
-void ir2m0(char *m0File) {
-  FILE *m0F = fopen(m0File, "w");
+void ir2m(char *mFile) {
+  FILE *mF = fopen(mFile, "w");
   for (int i=0; i<irTop; i++) {
-    ir2macro(m0F, &ir[i]);
+    ir2macro(mF, &ir[i]);
   }
-  fclose(m0F);
+  fclose(mF);
 }

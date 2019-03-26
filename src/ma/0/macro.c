@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../lib/map.h"
-#include "../lib/util.h"
+#include "../../lib/map.h"
+#include "../../lib/util.h"
 
 Pair macroList[] = {
   // io
@@ -56,15 +56,15 @@ void macroExpand(char *iFile, char *oFile) {
   fclose(oF);
 }
 
-// run: ./macro <file> 
+// run: ./ma <file> 
 // notice : <file> with no extension.
 int main(int argc, char *argv[]) {
-  argHandle(argc, argv, 2, "./macro <file>\n");
+  argHandle(argc, argv, 2, "./ma <file>\n");
 
   char *file = argv[1];
   char iFile[SMAX], oFile[SMAX];
-  sprintf(iFile, "%s.m0", file);
-  sprintf(oFile, "%s.s0", file);
+  sprintf(iFile, "%s.mx", file);
+  sprintf(oFile, "%s.sx", file);
 
   mapNew(&macroMap, 37); mapAddAll(&macroMap, macroList, ARRAY_SIZE(macroList));
   macroExpand(iFile, oFile);

@@ -3,7 +3,7 @@
 
 #include "lexer.h"
 #include "ir.h"
-#include "ir2m0.h"
+#include "ir2m.h"
 
 extern void parse(char *code);
 

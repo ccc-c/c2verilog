@@ -4,17 +4,17 @@ char code[TMAX];
 
 int main(int argc, char * argv[]) {
   argHandle(argc, argv, 2, "c0c <file> -d -r");
-  char c0File[SMAX], irFile[SMAX], m0File[SMAX];
-  sprintf(c0File, "%s.c0", argv[1]);
-  sprintf(irFile, "%s.i0", argv[1]);
-  sprintf(m0File, "%s.m0", argv[1]);
-  readText(c0File, code, TMAX);
+  char cFile[SMAX], irFile[SMAX], mFile[SMAX];
+  sprintf(cFile, "%s.cx", argv[1]);
+  sprintf(irFile, "%s.ix", argv[1]);
+  sprintf(mFile, "%s.mx", argv[1]);
+  readText(cFile, code, TMAX);
   // lex(code);
   // if (isDebug) lexDump();
   parse(code);
   irPass2();
   if (isDebug) irDump();
   irSave(irFile);
-  ir2m0(m0File);
+  ir2m(mFile);
   if (isFlag['r']) irRun();
 }
