@@ -19,9 +19,9 @@ extern void itob(int i, char* binary);
 extern int  btoi(char* binary);
 extern void format(char *buf, char *fmt, ...);
 
-#define NMAX 20
-#define SMAX 100
-#define TMAX 1000
+#define NMAX 100
+#define SMAX 1000
+#define TMAX 1000000
 
 #define member(c, set) strchr(set, c)
 #define error(...) { printf(__VA_ARGS__); assert(0); }

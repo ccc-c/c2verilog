@@ -10,9 +10,9 @@ typedef struct {
   char *textEnd;
 } StrTable;
 
-extern void stNew(StrTable *st, char *text);
-extern char *stPutn(StrTable *st, char *str, int n);
-extern char *stPut(StrTable *st, char *str);
+extern void ostNew(StrTable *st, char *text);
+extern char *ostAddn(StrTable *st, char *str, int n);
+extern char *ostAdd(StrTable *st, char *str);
 // 以下作用在全域變數 gStrTable 上。
 extern void stInit();
 extern char *stAdd(char *str);
