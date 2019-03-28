@@ -8,7 +8,8 @@ int main(int argc, char * argv[]) {
   sprintf(cFile, "%s.cx", argv[1]);
   sprintf(irFile, "%s.ix", argv[1]);
   sprintf(mFile, "%s.mx", argv[1]);
-  readText(cFile, code, TMAX);
+  if (readText(cFile, code, TMAX) < 0)
+    error("cc0:cFile %s not found !", cFile);
   parse(code);
   irPass2();
   if (isDebug) irDump();

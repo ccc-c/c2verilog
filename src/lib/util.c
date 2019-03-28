@@ -18,6 +18,7 @@ void argHandle(int argc, char *argv[], int argMin, char *msg) {
 
 int readText(char *fileName, char *text, int size) {
   FILE *file = fopen(fileName, "r");
+  if (file == NULL) return -1;
   int len = fread(text, 1, size, file);
   text[len] = '\0';
   fclose(file);

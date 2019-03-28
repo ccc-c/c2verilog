@@ -235,6 +235,7 @@ void pass1(string inFile) {
   debug("============= PASS1 ================\n");
   char line[100]="";
   FILE *fp = fopen(inFile, "r");
+  if (fp == NULL) error("pass1: file %s not found!\n", inFile);
   int address = 0;
   while (fgets(line, sizeof(line), fp)) {
     Code code;
@@ -264,7 +265,7 @@ void pass2(string inFile, string binFile) {
     code2bin(&code);
     if (isDebug) hexDump16(code.bin, code.size);
     debug("\n");
-    if (code.size > 0) fwrite(code.bin, 1, code.size*sizeof(int16_t), bfp);
+    if (code.size > 0) fwrite(code.bin, sizeof(uint16_t), code.size, bfp);
     address += code.size;
   }
   fclose(fp);

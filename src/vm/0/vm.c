@@ -88,10 +88,11 @@ void run(uint16_t *im, int16_t *m, int imTop) {
 int main(int argc, char *argv[]) {
   argHandle(argc, argv, 2, "./vm <file.ox>\n");
 
-  FILE *binFile = fopen(argv[1], "rb");
-  int imTop = fread(im, sizeof(im[0]), 32768, binFile);
+  FILE *oFile = fopen(argv[1], "rb");
+  if (oFile == NULL) error("vm: oFile %s not found!", argv[1]);
+  int imTop = fread(im, sizeof(im[0]), 32768, oFile);
   if (isDebug) { hexDump16(im, imTop); debug("\n"); }
-  fclose(binFile);
+  fclose(oFile);
 
   memcpy(m, im, imTop*sizeof(im[0])); // 啟動後將指令記憶體 im 複製到資料記憶體 m，這樣就不需要存取 im 的指令了。
 

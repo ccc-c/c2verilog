@@ -3,7 +3,7 @@
 # !*.*
 
 *.exe
-*.exe.stackdump
+*.stackdump
 *.hack
 *.bin
 *.o

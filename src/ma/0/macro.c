@@ -43,6 +43,7 @@ void macroExpand(char *iFile, char *oFile) {
   char line[SMAX];
   debug("====== macroExpand ============\n");
   FILE *iF = fopen(iFile, "r");
+  if (iF == NULL) error("macroExpand: file %s not found!\n", iFile);
   FILE *oF = fopen(oFile, "w");
   while (fgets(line, sizeof(line), iF)) {
     char code[TMAX];
