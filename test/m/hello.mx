@@ -1,0 +1,7 @@
+@main
+0;JMP
+
+(str) "hello!xxaabbccddxxx", 10, "world!", 0
+
+(main)
+.puts str

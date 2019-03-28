@@ -27,7 +27,7 @@ c0debug:
 m0run: 
 	$(BIN)/ma0 $(file)
 	$(BIN)/as0 $(file)
-	$(BIN)/vm0 $(file).o0
+	$(BIN)/vm0 $(file).ox
 
 clean:
 	rm -f $(BIN)/*.o $(BIN)/*.exe
