@@ -1,0 +1,22 @@
+@main  
+0;JMP  
+@timer  
+0;JMP  
+  
+(msg) "hello", 10, 0  
+  
+(main)  
+  
+(timer)  
+// .puts msg  
+@msg
+D=A
+@3
+swi
+// .puttime  
+@15
+swi
+  
+(forever)  
+@forever  
+0;JMP

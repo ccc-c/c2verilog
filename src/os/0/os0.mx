@@ -1,0 +1,16 @@
+@main
+0;JMP
+@timer
+0;JMP
+
+(msg) "hello", 10, 0
+
+(main)
+
+(timer)
+.puts msg
+.puttime
+
+(forever)
+@forever
+0;JMP

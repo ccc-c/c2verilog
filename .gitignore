@@ -2,6 +2,7 @@
 # !/**/
 # !*.*
 
+*.ox
 *.exe
 *.stackdump
 *.hack

@@ -1,0 +1,49 @@
+@main  
+0;JMP  
+@timer  
+0;JMP  
+  
+(msg0) "process0", 10, 0  
+(msg1) "process1", 10, 0  
+(processId) 0  
+  
+(main)  
+  
+(timer) // Scheduler  
+// .puttime  
+@15
+swi
+@processId  
+D=M+1  
+@2  
+D=D%A  
+@processId  
+M=D  
+  
+@process0  
+D;JEQ  
+@process1  
+0;JMP  
+  
+  
+(process0)  
+// .puts msg0  
+@msg0
+D=A
+@3
+swi
+@forever  
+0;JMP  
+  
+(process1)  
+// .puts msg1  
+@msg1
+D=A
+@3
+swi
+@forever  
+0;JMP  
+  
+(forever)  
+@forever  
+0;JMP  
