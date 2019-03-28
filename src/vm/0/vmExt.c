@@ -5,7 +5,8 @@ float   *F = (float*) &m[24577];
 int putstr(int16_t *str) {
   int16_t *p = str;
   while (*p != 0) {
-    printf("%c", (char) *p++);
+    printf("%c", *p);
+    p++;
   }
   return p-str;
 }

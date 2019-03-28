@@ -5,8 +5,6 @@
 
 Pair macroList[] = {
   // io
-  {"iputD","@0\nswi"},
-  {"cputD","@1\nswi"},
   {"puti", "@${1}\nD=M\n@0\nswi"},
   {"putc", "@${1}\nD=M\n@1\nswi"},
   {"puts", "@${1}\nD=A\n@3\nswi"},

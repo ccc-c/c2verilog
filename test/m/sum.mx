@@ -1,3 +1,10 @@
+@main  
+0;JMP  
+
+(msg) "sum=", 0
+(lineEnd) 13, 0
+
+(main)
 .seti t1 = 0
 .set  s = t1
 .seti t1 = 1
@@ -17,4 +24,6 @@
 .set  i = t3
 .goto L1
 (L2)
+.puts msg
 .puti s
+.puts lineEnd

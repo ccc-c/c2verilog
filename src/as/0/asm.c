@@ -101,7 +101,9 @@ void parseLabelData(Code *c, char *line) {
     c->bptr[i] = b;
     if (*p == '"') { // 字串 "..." 
       c->dtype[i] = 'S';
-      for (++p; *p != '"' && *p != '\0'; ) *b++ = *p++;
+      for (++p; *p != '"' && *p != '\0'; ) {
+        *b++ = *p++;
+      }
     } else if (isdigit(*p)) {
       if (strchr(p, '.')) { // 浮點數，大小為 2
         float f;
@@ -262,7 +264,7 @@ void pass2(string inFile, string binFile) {
     code2bin(&code);
     if (isDebug) hexDump16(code.bin, code.size);
     debug("\n");
-    if (code.size > 0) fwrite(code.bin, code.size*2, 1, bfp);
+    if (code.size > 0) fwrite(code.bin, 1, code.size*sizeof(int16_t), bfp);
     address += code.size;
   }
   fclose(fp);
