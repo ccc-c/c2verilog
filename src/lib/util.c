@@ -5,7 +5,7 @@ char isFlag[128];
 
 void argHandle(int argc, char *argv[], int argMin, char *msg) {
   if (argc < argMin) {
-    printf(msg);
+    printf("%s\n", msg);
     exit(1);
   }
   memset(isFlag, 0, sizeof(isFlag));

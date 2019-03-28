@@ -9,7 +9,7 @@ void lexInit(char *code) {
 }
 
 Token lexScan() {
-  Token t = { str: NULL, type: End };
+  Token t = { .str=NULL, .type=End };
 
   while (isspace(*p)) p++;
 
