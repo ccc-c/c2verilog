@@ -1,59 +1,60 @@
 CC := gcc
 CFLAGS = -std=c99 -O0 -Wall 
-TARGET = cc0 ma0 as0 vm0 vm1 ma1
+TARGET = cc1 ma1 as1 vm1 ma2 as2 vm2 as3 vm3
 BIN = ../bin
 LIB = lib/util.c lib/map.c lib/strTable.c
 
 all: $(TARGET)
 
-cc0: cc/0/cc0.c cc/0/lexer.c cc/0/compiler.c ir/0/ir.c ir/0/irvm.c ir/0/ir2m.c $(LIB)
+cc1: cc/1/cc.c cc/1/lexer.c cc/1/compiler.c ir/1/ir.c ir/1/irvm.c ir/1/ir2m.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
-as0: as/0/asm.c $(LIB)
+as1: as/1/asm.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
-vm0: vm/0/vm.c vm/0/vmExt.c $(LIB)
+as2: as/2/asm.c $(LIB)
+	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
+
+as3: as/3/asm.c $(LIB)
+	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
+
+vm1: vm/1/vm.c $(LIB)
+	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
+
+vm2: vm/2/vm.c vm/2/vmExt.c $(LIB)
 	$(CC) -D_VM_EXT_ $(CFLAGS) $^ -o $(BIN)/$@
 
-vm1: vm/1/vm.c vm/1/vmExt.c $(LIB)
+vm3: vm/3/vm.c vm/3/vmExt.c $(LIB)
 	$(CC) -D_VM_EXT_ $(CFLAGS) $^ -o $(BIN)/$@
-
-ma0: ma/0/macro.c $(LIB)
-	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
 ma1: ma/1/macro.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
-c0run:
-	$(BIN)/cc0 $(file) -r
+ma2: ma/2/macro.c $(LIB)
+	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
-c0debug:
-	$(BIN)/cc0 $(file) -d
+c1run:
+	$(BIN)/cc1 ../test/c/$(file) -r
 
-m0run: 
-	$(BIN)/ma0 $(file)
-	$(BIN)/as0 $(file)
-	$(BIN)/vm0 $(file).ox
+m1run: 
+	$(BIN)/ma1 ../test/m/$(file)
+	$(BIN)/as1 ../test/m/$(file)
+	$(BIN)/vm1 ../test/m/$(file).ox
 
-os0run: 
-	$(BIN)/ma1 os/0/os0
-	$(BIN)/as0 os/0/os0
-	$(BIN)/vm1 os/0/os0.ox
+m2run: 
+	$(BIN)/ma2 ../test/m/$(file)
+	$(BIN)/as2 ../test/m/$(file)
+	$(BIN)/vm2 ../test/m/$(file).ox
+
+m3run: 
+	$(BIN)/ma2 ../test/m/$(file)
+	$(BIN)/as3 ../test/m/$(file)
+	$(BIN)/vm3 ../test/m/$(file).ox
 
 os1run: 
-	$(BIN)/ma1 os/1/os1
-	$(BIN)/as0 os/1/os1
-	$(BIN)/vm1 os/1/os1.ox
-
-os2run: 
-	$(BIN)/ma1 os/2/os2
-	$(BIN)/as0 os/2/os2
-	$(BIN)/vm1 os/2/os2.ox
-
-os3run: 
-	$(BIN)/ma1 os/3/os3
-	$(BIN)/as0 os/3/os3
-	$(BIN)/vm1 os/3/os3.ox
+	$(BIN)/ma2 os/0/$(OS)
+	$(BIN)/as3 os/0/$(OS)
+	$(BIN)/vm3 os/0/$(OS).ox
 
 clean:
 	rm -f $(BIN)/*.o $(BIN)/*.exe

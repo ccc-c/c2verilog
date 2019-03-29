@@ -1,7 +1,6 @@
 #include "vm.h"
-#include <time.h>
 
-float   *F = (float*) &m[24580];
+float   *F = (float*) &m[24577];
 
 int putstr(int16_t *str) {
   int16_t *p = str;
@@ -14,9 +13,6 @@ int putstr(int16_t *str) {
 
 // 一開始就載入 im 到 m，所以不需要再有 D=I 之類的指令了。
 void swi(int16_t A, int16_t D) {
-  time_t rawtime;
-  struct tm * timeinfo;
-
   switch (A) {
     case 0x00: // swi 0: print integer
       printf("%d", D);
@@ -26,11 +22,6 @@ void swi(int16_t A, int16_t D) {
       break;
     case 0x03: // swi 3: print string in m
       putstr(&m[D]);
-      break;
-    case 0x0F: // swi 15: print time
-      time ( &rawtime );
-      timeinfo = localtime ( &rawtime );
-      printf("time: %s", asctime (timeinfo) );
       break;
     case 0x11: // swi 17: fsetm
       *F = *(float*) &m[D];
@@ -71,7 +62,7 @@ int aluExt(int16_t c, int16_t A, int16_t D, int16_t AM) {
     case 0x2B: out = D != AM;  break; // 不等於
     case 0x2C: out = D ^ AM;   break; // xor
     case 0x2D: error("call not defined!"); break; // {"call", "101101"},
-    case 0x2E: PC = ILR; break;  // {"iret", "101110"},
+    case 0x2E: error("ret not defined!"); break;  // {"ret",  "101110"},
     case 0x2F: swi(A, D); break;
     default: break;
   }

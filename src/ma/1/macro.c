@@ -8,7 +8,6 @@ Pair macroList[] = {
   {"puti", "@${1}\nD=M\n@0\nswi"},
   {"putc", "@${1}\nD=M\n@1\nswi"},
   {"puts", "@${1}\nD=A\n@3\nswi"},
-  {"puttime", "@15\nswi"},
   // float
   {"putf", "@18\nswi"},
   {"setf", "@${1}\nD=A\n@17\nswi"},

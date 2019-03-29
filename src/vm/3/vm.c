@@ -1,10 +1,14 @@
 #include "vm.h"
 
-int16_t D = 0, A = 0, PC = 0;
-uint16_t I = 0;
+int16_t D = 0, A = 0;
+// uint16_t I = 0;
 uint16_t im[32768];
-int16_t m[24576+5];
-int16_t *Keyboard = &m[24576];
+int16_t m[32768];
+// int16_t *Keyboard = &m[24576];
+
+// Timer Interrupt
+int iCount = 0;
+int iTimer = 1000000;
 
 // ALU: C 型指令的 cTable 之處理, 也就是T = X op Y 的狀況 
 int alu(int16_t c, int16_t A, int16_t D, int16_t AM) {
@@ -28,7 +32,11 @@ int alu(int16_t c, int16_t A, int16_t D, int16_t AM) {
     case 0x37: out = AM+1; break; // "AM+1","110111"
     case 0x3A: out = -1; break;   // "-1",  "111010"
     case 0x3F: out = 1;  break;   // "1",   "111111"
+#ifdef _VM_EXT_
+    default: out = aluExt(c, A, D, AM); // 擴充指令集
+#else
     default: error("alu: c=%d not found!", c);
+#endif
   }
   return out;
 }
@@ -53,7 +61,7 @@ void cInstr(int16_t a, int16_t c, int16_t d, int16_t j) { // int16_t i,
 }
 
 // HackCPU : 
-void cpu(uint16_t I) {
+void cpu() { // uint16_t I
   uint16_t a, c, d, j;
   debug("PC=%04X I=%04X", PC, I);
   PC ++;
@@ -69,6 +77,11 @@ void cpu(uint16_t I) {
   debug(" A=%04hX D=%04hX=%05d m[A]=%04hX", A, D, D, m[A]);
   if (I & 0x8000) debug(" a=%X c=%02X d=%X j=%X", a, c, d, j);
   debug("\n");
+  iCount ++;
+  if (iCount % iTimer == 0) {
+    ILR = PC;
+    PC = 2;
+  }
 }
 
 // 虛擬機主程式
@@ -76,7 +89,7 @@ void run(uint16_t *im, int16_t *m, int imTop) {
   while (1) {
     if (PC >= imTop) break; // 超出範圍，虛擬機自動結束。
     I = im[PC];
-    cpu(I);
+    cpu();
   }
 }
 

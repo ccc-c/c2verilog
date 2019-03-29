@@ -1,0 +1,21 @@
+@main  
+0;JMP  
+  
+(str) "hello world!", 10, 0  
+  
+  
+(hello)  
+// .puts str  
+@str
+D=A
+@3
+swi
+ret  
+  
+(main)  
+// .call hello  
+@hello
+call
+// .call hello  
+@hello
+call
