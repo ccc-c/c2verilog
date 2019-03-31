@@ -20,25 +20,25 @@ D=M
 @i
 M=D
 (L1) 
-// .set  t2 = i 
+// .set  t1 = i 
 @i
 D=M
-@t2
+@t1
 M=D
-// .setc t3 = 10 
+// .setc t2 = 10 
 @10
 D=A
-@t3
-M=D
-// .op   t4 = t2 <= t3 
 @t2
-D=M
-@t3
-D=D<=M
-@t4
 M=D
-// .ifnot t4 goto L2 
-@t4
+// .op   t3 = t1 <= t2 
+@t1
+D=M
+@t2
+D=D<=M
+@t3
+M=D
+// .ifnot t3 goto L2 
+@t3
 D=M
 @L2
 D;JEQ

@@ -3,10 +3,10 @@
 .setc t1 = 1
 .set  i = t1
 (L1)
-.set  t2 = i
-.setc t3 = 10
-.op   t4 = t2 <= t3
-.ifnot t4 goto L2
+.set  t1 = i
+.setc t2 = 10
+.op   t3 = t1 <= t2
+.ifnot t3 goto L2
 .set  t1 = s
 .set  t2 = i
 .op   t3 = t1 + t2

@@ -36,8 +36,8 @@
 #define CR4 m[R_CR+4]
 
 extern void swi(int16_t A, int16_t D);
-extern int aluExt(int16_t c, int16_t A, int16_t D, int16_t AM);
-extern int alu(int16_t c, int16_t A, int16_t D, int16_t AM);
+extern int aluExt(int16_t c, int16_t AM);
+extern int alu(int16_t c, int16_t AM);
 extern void cInstr(int16_t a, int16_t c, int16_t d, int16_t j);
 extern int putstr(int16_t *str);
 extern void cpu();

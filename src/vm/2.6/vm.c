@@ -15,13 +15,9 @@ int putstr(int16_t *str) {
   return p-str;
 }
 
-char cJump = 0;
-
 // ALU: C 型指令的 cTable 之處理, 也就是T = X op Y 的狀況 
-int alu(int16_t c, int16_t AM) {
+int alu(int16_t c, int16_t A, int16_t D, int16_t AM) {
   int16_t out = 0;
-  cJump = 0;
-
   switch (c) {
     case 0x00: out = D&AM; break; // "D&AM","000000"
     case 0x02: out = D+AM; break; // "D+AM","000010"
@@ -41,14 +37,17 @@ int alu(int16_t c, int16_t AM) {
     case 0x37: out = AM+1; break; // "AM+1","110111"
     case 0x3A: out = -1; break;   // "-1",  "111010"
     case 0x3F: out = 1;  break;   // "1",   "111111"
-    default: out = aluExt(c, AM); // 擴充指令集
+    default: out = aluExt(c, A, D, AM); // 擴充指令集
   }
   return out;
 }
 
+char cJump = 0;
+
 // C 型指令的擴充指令集 aluExt
-int aluExt(int16_t c, int16_t AM) {
+int aluExt(int16_t c, int16_t A, int16_t D, int16_t AM) {
   int16_t out = 0;
+  cJump = 0;
   switch (c) {
     // 運算延伸指令 : 使用 10xxxx ，避開 {"0",   "101010"}
     case 0x20: out = (D << AM);  break; // 左移
@@ -130,7 +129,7 @@ void swi(int16_t A, int16_t D) {
 void cInstr(int16_t a, int16_t c, int16_t d, int16_t j) { // int16_t i, 
   int AM = (a == 0) ? A : m[A];
 
-  int16_t aluOut = alu(c, AM);
+  int16_t aluOut = alu(c, A, D, AM);
 
   if (isDebug) printf(" (cJump=%d aluOut=%d) ", cJump, aluOut);
   if (cJump) {
@@ -158,16 +157,25 @@ void cInstr(int16_t a, int16_t c, int16_t d, int16_t j) { // int16_t i,
 
 // 時間中斷處理
 // 問題: 如果前一個是跳躍指令，那就已經跳過去了，此時中斷也不會改變跳躍狀況！
+/*
+iCount = 7670000
+iCount = 7680000
+interrupt: iCount = 7680000 A=0008 D=7530 PC=0009 I=EA87
+Sun Mar 31 13:29:33 2019
+Sun Mar 31 13:29:33 2019
+Sun Mar 31 13:29:33 2019
+Sun Mar 31 13:29:33 2019
+*/
 
 int interrupt() {
   iCount ++; // 已執行指令數
-  // if (iCount % 10000 == 0) printf("iCount = %d\n", iCount);
+  if (iCount % 10000 == 0) printf("iCount = %d\n", iCount);
   if (isDebug) printf(" (iCount=%d, savedA=%04hX savedD=%04hX) ", iCount, savedA, savedD);
-  uint32_t tiPeriod = ((uint32_t) CR1) << 12; // 快速的乘以 4096
+  uint32_t tiPeriod = ((uint32_t) CR1) << 8; // 快速的乘以 256
   if (!inInterrupt /* 不允許中斷重入 */ && (tiPeriod > 0) && (iCount % tiPeriod == 0)) {
     printf("interrupt: iCount = %d A=%04X D=%04X PC=%04X I=%04hX\n", iCount, A, D, PC, I);
     // 保存暫存器以便返回時恢復
-    // isDebug = 1;
+    isDebug = 1;
     savedA = A;
     savedD = D;
     ILR = PC;

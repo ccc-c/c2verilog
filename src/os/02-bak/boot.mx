@@ -1,0 +1,31 @@
+@resetHandler
+0;JMP
+@timerHandler
+0;JMP
+
+(resetHandler)
+.setc CR1 = 3000
+
+(main)
+
+(forever)
+
+.puts mainMsg
+
+(delay)  // delay a while, 要用兩層迴圈，因為 16 位元整數太小，CPU 速度太快
+.setc i = 100
+(iBusyLoop)
+.opc i = i - 1
+
+.setc j = 1000
+(jBusyLoop)
+.opc j = j - 1
+.opc t = j == 0
+.ifnot t goto jBusyLoop
+
+.opc t = i == 0
+.ifnot t goto iBusyLoop
+
+.goto forever
+
+(mainMsg) "main:forever", 10, 0

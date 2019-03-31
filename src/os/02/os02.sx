@@ -5,8 +5,8 @@
 0;JMP  
   
 (resetHandler)  
-// .setc CR1 = 30000  
-@30000
+// .setc CR1 = 3000  
+@3000
 D=A
 @CR1
 M=D
@@ -14,87 +14,21 @@ M=D
 (main)  
   
 (forever)  
-  
-// .puts mainMsg  
-@mainMsg
-D=A
-@3
-swi
-  
-(delay)  // delay a while, 要用兩層迴圈，因為 16 位元整數太小，CPU 速度太快  
-// .setc i = 100  
-@100
-D=A
-@i
-M=D
-(iBusyLoop)  
-// .opc i = i - 1  
-@i
-D=M
-@1
-D=D-A
-@i
-M=D
-  
-// .setc j = 1000  
-@1000
-D=A
-@j
-M=D
-(jBusyLoop)  
-// .opc j = j - 1  
-@j
-D=M
-@1
-D=D-A
-@j
-M=D
-// .opc t = j == 0  
-@j
-D=M
-@0
-D=D==A
-@t
-M=D
-// .ifnot t goto jBusyLoop  
-@t
-D=M
-@jBusyLoop
-D;JEQ
-  
-// .opc t = i == 0  
-@i
-D=M
-@0
-D=D==A
-@t
-M=D
-// .ifnot t goto iBusyLoop  
-@t
-D=M
-@iBusyLoop
-D;JEQ
-  
 // .goto forever  
 @forever
 0;JMP
-  
-(mainMsg) "main:forever", 10, 0  
 // =========== iFile: os/02/const.mx ==============
 (LF) 10, 0  
   
 // =========== iFile: os/02/time.mx ==============
-(timeMsg) "timerHandler: time=", 0  
+(timeMsg) "timerHandler: time=", 10, 0  
   
 (timerHandler)  
 // .puts timeMsg  
-@timeMsg
-D=A
-@3
-swi
 // .puttime  
 @15
 swi
+// .puts timeMsg  
 // .puts LF  
 @LF
 D=A
