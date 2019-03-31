@@ -187,7 +187,7 @@ void run(uint16_t *im, int16_t *m, int imTop) {
   while (1) {
     if (PC >= imTop) break; // 超出範圍，虛擬機自動結束。
     I = im[PC];
-    debug("PC=%04X I=%04X", PC, I);
+    debug("PC=%04hX I=%04hX", PC, I);
     cpu();
   }
 }

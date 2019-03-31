@@ -9,6 +9,9 @@ all: $(TARGET)
 cc1: cc/1/cc.c cc/1/lexer.c cc/1/compiler.c ir/1/ir.c ir/1/irvm.c ir/1/ir2m.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
+cc2: cc/2/cc.c cc/2/lexer.c cc/2/compiler.c ir/1/ir.c ir/1/irvm.c ir/1/ir2m.c $(LIB)
+	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
+
 as1: as/1/asm.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
@@ -40,6 +43,18 @@ os02:
 	$(BIN)/ma2 os/02/boot.mx os/02/const.mx os/02/time.mx -o os/02/os02.sx
 	$(BIN)/as3 os/02/os02
 	$(BIN)/vm3 os/02/os02.ox
+
+c1Run: 
+	$(BIN)/cc1 ../test/c/$(file)
+	$(BIN)/ma2 ../test/c/$(file).mx -o ../test/c/$(file).sx
+	$(BIN)/as3 ../test/c/$(file)
+	$(BIN)/vm3 ../test/c/$(file).ox -d
+
+cRun: 
+	$(BIN)/cc2 ../test/c/$(file) -d
+	$(BIN)/ma2 ../test/c/$(file).mx -o ../test/c/$(file).sx
+	$(BIN)/as3 ../test/c/$(file)
+	$(BIN)/vm3 ../test/c/$(file).ox -d
 
 mRun: 
 	$(BIN)/ma1 ../test/m/$(file)

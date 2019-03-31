@@ -1,0 +1,58 @@
+// =========== iFile: ../test/c/if.mx ==============
+// .setc t1 = 61 
+@61
+D=A
+@t1
+M=D
+// .set  score = t1 
+@t1
+D=M
+@score
+M=D
+// .set  t1 = score 
+@score
+D=M
+@t1
+M=D
+// .setc t2 = 60 
+@60
+D=A
+@t2
+M=D
+// .op   t3 = t1 >= t2 
+@t1
+D=M
+@t2
+D=D>=M
+@t3
+M=D
+// .ifnot t3 goto L1 
+@t3
+D=M
+@L1
+D;JEQ
+// .setc t1 = 1 
+@1
+D=A
+@t1
+M=D
+// .set  pass = t1 
+@t1
+D=M
+@pass
+M=D
+// .goto L2 
+@L2
+0;JMP
+(L1) 
+// .setc t1 = 0 
+@0
+D=A
+@t1
+M=D
+// .set  pass = t1 
+@t1
+D=M
+@pass
+M=D
+(L2) 

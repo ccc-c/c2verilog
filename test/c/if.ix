@@ -1,0 +1,13 @@
+t1 = 61
+score = t1
+t1 = score
+t2 = 60
+t3 = t1 >= t2
+ifnot t3 goto L1
+t1 = 1
+pass = t1
+goto L2
+(L1)
+t1 = 0
+pass = t1
+(L2)

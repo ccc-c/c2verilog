@@ -100,7 +100,7 @@ void WHILE() {
   irEmitLabel(whileBegin);
   skip("while");
   skip("(");
-  int e = E();
+  int e = EXP();
   irEmitIfNotGoto(e, whileEnd);
   skip(")");
   STMT();
@@ -108,10 +108,31 @@ void WHILE() {
   irEmitLabel(whileEnd);
 }
 
+// if (E) STMT (else STMT)?
+void IF() {
+  int elseBegin = nextLabel();
+  int ifEnd = nextLabel();
+  skip("if");
+  skip("(");
+  int e = EXP();
+  irEmitIfNotGoto(e, elseBegin);
+  skip(")");
+  STMT();
+  irEmitGoto(ifEnd);
+  irEmitLabel(elseBegin);
+  if (isNext("else")) {
+    skip("else");
+    STMT();
+  }
+  irEmitLabel(ifEnd);
+}
+
 // STMT = WHILE | BLOCK | ASSIGN ;
 void STMT() {
   if (isNext("while"))
     WHILE();
+  else if (isNext("if"))
+    IF();
   else if (isNext("{"))
     BLOCK();
   else {

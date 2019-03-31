@@ -1,0 +1,13 @@
+.setc t1 = 61
+.set  score = t1
+.set  t1 = score
+.setc t2 = 60
+.op   t3 = t1 >= t2
+.ifnot t3 goto L1
+.setc t1 = 1
+.set  pass = t1
+.goto L2
+(L1)
+.setc t1 = 0
+.set  pass = t1
+(L2)
