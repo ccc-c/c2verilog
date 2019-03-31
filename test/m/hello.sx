@@ -4,7 +4,7 @@
 (str) "hello ", 10, "world!", 10, "world!", 10, "world!", 0  
   
 (main)  
-// .puts str
+// .puts str  
 @str
 D=A
 @3

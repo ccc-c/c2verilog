@@ -24,8 +24,8 @@ vm1: vm/1/vm.c $(LIB)
 vm2: vm/2/vm.c vm/2/vmExt.c $(LIB)
 	$(CC) -D_VM_EXT_ $(CFLAGS) $^ -o $(BIN)/$@
 
-vm3: vm/3/vm.c vm/3/vmExt.c $(LIB)
-	$(CC) -D_VM_EXT_ $(CFLAGS) $^ -o $(BIN)/$@
+vm3: vm/3/vm.c $(LIB)
+	$(CC) -D_VM_EXT_ -g $(CFLAGS) $^ -o $(BIN)/$@
 
 ma1: ma/1/macro.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
@@ -33,28 +33,27 @@ ma1: ma/1/macro.c $(LIB)
 ma2: ma/2/macro.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
-c1run:
-	$(BIN)/cc1 ../test/c/$(file) -r
+run:
+	$(BIN)/${exe} ../test/$(file) -d -r
 
-m1run: 
+os02:
+	$(BIN)/ma2 os/02/boot.mx os/02/const.mx os/02/time.mx -o os/02/os02.sx
+	$(BIN)/as3 os/02/os02
+	$(BIN)/vm3 os/02/os02.ox
+
+mRun: 
 	$(BIN)/ma1 ../test/m/$(file)
-	$(BIN)/as1 ../test/m/$(file)
-	$(BIN)/vm1 ../test/m/$(file).ox
-
-m2run: 
-	$(BIN)/ma2 ../test/m/$(file)
-	$(BIN)/as2 ../test/m/$(file)
-	$(BIN)/vm2 ../test/m/$(file).ox
-
-m3run: 
-	$(BIN)/ma2 ../test/m/$(file)
 	$(BIN)/as3 ../test/m/$(file)
 	$(BIN)/vm3 ../test/m/$(file).ox
 
-os1run: 
-	$(BIN)/ma2 os/0/$(OS)
-	$(BIN)/as3 os/0/$(OS)
-	$(BIN)/vm3 os/0/$(OS).ox
+sRun: 
+	$(BIN)/as3 ../test/m/$(file)
+	$(BIN)/vm3 ../test/m/$(file).ox
+
+osRun: 
+	$(BIN)/ma1 os/$(file)
+	$(BIN)/as3 os/$(file)
+	$(BIN)/vm3 os/$(file).ox
 
 clean:
 	rm -f $(BIN)/*.o $(BIN)/*.exe

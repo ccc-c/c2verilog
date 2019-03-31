@@ -1,0 +1,29 @@
+@main  
+0;JMP  
+@timer  
+0;JMP  
+  
+(msg) "hello", 10, 0  
+  
+(main)  
+// .setc CR1 = 10000  
+@10000
+D=A
+@CR1
+M=D
+// .puti CR1  
+(forever)  
+@forever  
+0;JMP  
+  
+(timer)  
+// .puts msg  
+@msg
+D=A
+@3
+swi
+// .puttime  
+@15
+swi
+iret  
+  

@@ -8,6 +8,7 @@ Pair macroList[] = {
   {"puti", "@${1}\nD=M\n@0\nswi"},
   {"putc", "@${1}\nD=M\n@1\nswi"},
   {"puts", "@${1}\nD=A\n@3\nswi"},
+  {"puttime", "@15\nswi"},
   // float
   {"putf", "@18\nswi"},
   {"setf", "@${1}\nD=A\n@17\nswi"},
@@ -17,11 +18,15 @@ Pair macroList[] = {
   {"divf", "@${1}\nD=A\n@22\nswi"},
   // control
   {"set",  "@${3}\nD=M\n@${1}\nM=D"},   // .set  i = t1
-  {"seti", "@${3}\nD=A\n@${1}\nM=D"},   // .seti i = 5
+  {"setc", "@${3}\nD=A\n@${1}\nM=D"},   // .setc i = 5
   {"goto", "@${1}\n0;JMP"},             // goto L
   {"if",   "@${1}\nD=M\n@${3}\nD;JNE"}, // if e goto L
   {"ifnot","@${1}\nD=M\n@${3}\nD;JEQ"}, // ifnot e goto L
   {"op",   "@${3}\nD=M\n@${5}\nD=D${4}M\n@${1}\nM=D"}, // .op z = x + y
+  {"opc",  "@${3}\nD=M\n@${5}\nD=D${4}A\n@${1}\nM=D"}, // .op z = x + 1
+  // function
+  {"call",  "@${1}\ncall"},   // .call f
+  {"ret",   "ret"},         // .ret
 };
 
 Map macroMap;

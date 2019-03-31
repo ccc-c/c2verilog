@@ -33,7 +33,6 @@ int addr[SYM_SIZE] = {
   8, 9, 10, 11, 
   12, 13, 14, 15,
   16384, 24576, 
-  0, 1, 2, 3, 4
 };
 
 Pair symList[] = {
@@ -41,8 +40,7 @@ Pair symList[] = {
   {"R4",&addr[4]},{"R5",&addr[5]},{"R6",&addr[6]},{"R7",&addr[7]},
   {"R8",&addr[8]}, {"R9",&addr[9]}, {"R10",&addr[10]}, {"R11",&addr[11]},
   {"R12",&addr[12]}, {"R13",&addr[13]}, {"R14",&addr[14]}, {"R15",&addr[15]},
-  {"SCREEN",&addr[16]}, {"KBD",&addr[17]}, {"SP",&addr[18]}, {"LCL",&addr[19]}, 
-  {"ARG",&addr[20]}, {"THIS",&addr[21]}, {"THAT",&addr[22]}
+  {"SCREEN",&addr[16]}, {"KBD",&addr[17]}, 
 };
 
 Map dMap, cMap, jMap, symMap;
@@ -64,51 +62,6 @@ void symDump(Map *map) {
   }
 }
 
-void parseLabelData(Code *c, char *line) {
-  char *p = line;
-  assert(*p == '(');
-  c->type = 'L';
-  char *token = c->label = strtok(++p, ")");
-
-  int i;
-  for (i=0; token  != NULL; i++) {
-    p = token = strtok(NULL, ",");
-    if (token) {
-      while (*p == ' ') p++;
-    }
-    c->dstr[i] = (p && *p!='\0') ? p : NULL;
-  }
-
-  uint16_t *b = c->bin;
-  for (int i=0; (p = c->dstr[i]); i++) { // 注意： p 改指向 dstr[i] 了
-    c->bptr[i] = b;
-    if (*p == '"') { // 字串 "..." 
-      c->dtype[i] = 'S';
-      for (++p; *p != '"' && *p != '\0'; ) {
-        *b++ = *p++;
-      }
-    } else if (isdigit(*p)) {
-      if (strchr(p, '.')) { // 浮點數，大小為 2
-        float f;
-        c->dtype[i] = 'F';
-        sscanf(p, "%f", &f);
-        uint16_t *tf = (uint16_t*) &f;
-        *b++ = tf[0];
-        *b++ = tf[1];
-      } else {
-        int n;
-        sscanf(p, "%d", &n);
-        c->dtype[i] = 'N';
-        *b++ = n;
-      }
-    } else { // 應該是符號，暫時先放 0
-      c->dtype[i] = 'L';
-      *b++ = 0;
-    }
-  }
-  c->size = b - c->bin;
-}
-
 int parse(char *line, Code *c) {
   memset(c, 0, sizeof(Code));
   c->line = line;
@@ -123,7 +76,9 @@ int parse(char *line, Code *c) {
   if (*p == '\0') { // 空行 : 不算大小
     c->size = 0;
   } else if (*p == '(') { // 如果是符號行 (L)
-    parseLabelData(c, p);
+    c->type = 'L';
+    c->label = strtok(++p, ")");
+    c->size = 0;
   } else if (*p == '@') { // 如果是 A 指令
     c->type = 'A';
     c->a = strtok(++p, " ");
@@ -263,7 +218,6 @@ void assemble(string file) {
   pass1(inFile);
   symDump(&symMap);
   pass2(inFile, binFile);
-  symDump(&symMap);
 }
 
 int main(int argc, char *argv[]) {

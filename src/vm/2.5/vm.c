@@ -67,9 +67,9 @@ int aluExt(int16_t c, int16_t A, int16_t D, int16_t AM) {
     case 0x34: // {"iret", "110100"}
       A = savedA;
       D = savedD;
-      printf("\n  debug:IRET: PC=%04X iCount=%d", PC, iCount);
+      printf("IRET: PC=%04X iCount=%d", PC, iCount);
       PC = ILR;
-      printf(" ILR=%04X A=%04X, D=%04X\n", ILR, A, D);
+      printf("ILR=%04X A=%04X, D=%04X\n", ILR, A, D);
       inInterrupt = 0;
       // exit(0); 
       break;
@@ -95,7 +95,8 @@ void swi(int16_t A, int16_t D) {
     case 0x0F: // swi 15: print time
       time ( &rawtime );
       timeinfo = localtime ( &rawtime );
-      printf("%s", asctime (timeinfo) );
+      printf("time: %s", asctime (timeinfo) );
+      printf(" iCount = %d", iCount);
       break;
     case 0x11: // swi 17: fsetm
       F = *(float*) &m[D];
@@ -152,11 +153,11 @@ int interruptHandler() {
     savedA = A;
     savedD = D;
     ILR = PC; // 中斷時必須把 PC 存起來，這樣 Scheduler 才能保存該 thread 的 PC 並在下次返回
-    printf("  debug:interruptHandler(): iCount = %d ILR=%04X A= %04X D=%04X\n", iCount, ILR, A, D);
+    printf("interruptHandler(): iCount = %d ILR=%04X A= %04X D=%04X\n", iCount, ILR, A, D);
     PC = 2;
     return 1;
   }
-  // if (iCount > tiPeriod * 2 + 100) exit(0);
+  if (iCount > tiPeriod * 2 + 100) exit(0);
   return 0;
 }
 
@@ -179,7 +180,7 @@ void cpu() {
   debug(" A=%04hX D=%04hX=%05d m[A]=%04hX", A, D, D, m[A]);
   if ((I & 0xE000)==0xE000) debug(" a=%X c=%02X d=%X j=%X", a, c, d, j);
   debug("\n");
-  interruptHandler();
+  // interruptHandler();
 }
 
 // 虛擬機主程式

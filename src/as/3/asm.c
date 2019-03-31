@@ -36,6 +36,7 @@ Pair cList[] = {
   {"call", "101101"},
   {"ret",  "101110"},
   {"swi",  "101111"},
+  {"iret", "110100"},
 };
 
 Pair jList[] = {
@@ -50,10 +51,9 @@ int addr[SYM_SIZE] = {
   8, 9, 10, 11, 
   12, 13, 14, 15,
   R_SCREEN, R_KBD, 
-  0, 1, 2, 3, 4,
-  R_PC, R_LR, R_SP, R_FP, R_ILR, R_I, R_F, // 特用暫存器映射到此處
-  // 緊接在 SCREEN 前面不容易被破壞 (不能用 R15, R14, ... 等空間，因為程式與資料會載入到最前面
-  // 這有可能導致存取 R0, ... R15 等會破壞資料，所以程式不能存取前面區域的記憶體。
+  0, 1, 2, 3, 4, // 這行的代號是給堆疊虛擬機用的，c2verilog 專案沒用到了
+  R_PC, R_LR, R_SP, R_FP, R_ILR, R_I, R_F,  // 特用暫存器映射到此處 (放前面容易出問題，所以放 SCREEN 後面)
+  R_CR0, R_CR1, R_CR2, R_CR3, R_CR4
 };
 
 Pair symList[] = {
@@ -63,11 +63,19 @@ Pair symList[] = {
   {"R12",&addr[12]}, {"R13",&addr[13]}, {"R14",&addr[14]}, {"R15",&addr[15]},
   {"SCREEN",&addr[16]}, {"KBD",&addr[17]}, 
   {"SP",&addr[18]}, {"LCL",&addr[19]}, {"ARG",&addr[20]}, {"THIS",&addr[21]}, {"THAT",&addr[22]}, // 這行的代號是給堆疊虛擬機用的，c2verilog 專案沒用到了
-  {"PC", &addr[23]}, {"LR", &addr[24]}, {"SP", &addr[25]}, {"FP", &addr[26]}, {"ILR", &addr[27]}, {"I", &addr[28]},
+  {"PC", &addr[23]}, {"LR", &addr[24]}, {"SP", &addr[25]}, {"FP", &addr[26]}, {"ILR", &addr[27]}, {"I", &addr[28]}, {"F", &addr[29]}, 
+  {"CR0", &addr[30]}, {"CR1", &addr[31]}, {"CR2", &addr[32]}, {"CR3", &addr[33]}, {"CR4", &addr[34]}
 };
 
+#define CR0 m[R_CR]   // CR0 : 控制暫存器，位元 0 (是否允許外部中斷) ....
+#define CR1 m[R_CR+1] // CR1 : 時間中斷長度， 0 代表不啟動時間中斷
+#define I_PERIOD CR1
+#define CR2 m[R_CR+2]
+#define CR3 m[R_CR+3]
+#define CR4 m[R_CR+4]
+
 Map dMap, cMap, jMap, symMap;
-int varTop = 16;
+int varIdx = R_SCREEN - 1; // 變數安排從 SCREEN-1 向下遞減
 
 void symAdd(Map *map, char *label, int address) {
   addr[map->top] = address;
@@ -203,8 +211,8 @@ void code2bin(Code *c) {
       char *symbol = c->a;
       int* addrPtr = mapLookup(&symMap, symbol);
       if (addrPtr == NULL) { // 宣告變數
-        symAdd(&symMap, symbol, varTop); // 新增一個變數
-        A = varTop ++;
+        symAdd(&symMap, symbol, varIdx); // 新增一個變數
+        A = varIdx --;
       } else { // 已知變數 (標記) 位址
         A = *addrPtr;
       }

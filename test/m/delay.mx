@@ -1,0 +1,34 @@
+@main
+0;JMP
+
+(str) "hello world!", 10, 0
+(LF) 10, 0
+(i) 0
+(j) 0
+(t) 0
+
+(delay)  // delay a while, 要用兩層迴圈，因為 16 位元整數太小，CPU 速度太快
+
+.setc i = 2000
+(iBusyLoop)
+.opc i = i - 1
+
+.setc j = 1000
+(jBusyLoop)
+.opc j = j - 1
+.opc t = j == 0
+.ifnot t goto jBusyLoop
+
+.opc t = i == 0
+.ifnot t goto iBusyLoop
+ret
+
+(hello)
+.puts str
+ret
+
+(main)
+.call hello
+.call delay
+.call hello
+.call delay

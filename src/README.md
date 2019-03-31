@@ -44,6 +44,27 @@ $ make m3run file=sum
 sum=55
 
 user@DESKTOP-96FRN6B MSYS /d/ccc/book/c2verilog/src
+$ make os1run OS=os1.3
+../bin/ma2 os/1/os1.3
+../bin/as3 os/1/os1.3
+../bin/vm3 os/1/os1.3.ox
+time: Fri Mar 29 15:50:34 2019
+process1
+time: Fri Mar 29 15:50:34 2019
+process2
+time: Fri Mar 29 15:50:34 2019
+process0
+time: Fri Mar 29 15:50:34 2019
+process1
+time: Fri Mar 29 15:50:34 2019
+process2
+time: Fri Mar 29 15:50:34 2019
+process0
+time: Fri Mar 29 15:50:34 2019
+process1
+...
+
+user@DESKTOP-96FRN6B MSYS /d/ccc/book/c2verilog/src
 $ make c1run file=sum
 ../bin/cc1 ../test/c/sum -r
 token = s          type = Id

@@ -1,7 +1,7 @@
 #include "util.h"
 
 char isDebug = 0;
-char isFlag[128];
+char isFlag[128], *argOut = NULL;
 
 void argHandle(int argc, char *argv[], int argMin, char *msg) {
   if (argc < argMin) {
@@ -9,9 +9,14 @@ void argHandle(int argc, char *argv[], int argMin, char *msg) {
     exit(1);
   }
   memset(isFlag, 0, sizeof(isFlag));
+  char isOut = 0;
   for (int i=0; i<argc; i++) {
     char *a=argv[i];
-    if (*a++ == '-') isFlag[(int) *a] = 1;
+    if (isOut) argOut = a;
+    if (*a++ == '-') {
+      isFlag[(int) *a] = 1;
+      isOut = (*a == 'o')? 1 : 0;
+    }
   }
   isDebug = isFlag['d'];
 }

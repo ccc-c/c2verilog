@@ -1,0 +1,7 @@
+(timeMsg) "timerHandler: time=", 0
+
+(timerHandler)
+.puts timeMsg
+.puttime
+.puts LF
+iret

@@ -1,0 +1,115 @@
+@main  
+0;JMP  
+@timer  
+0;JMP  
+  
+(msg0) "thread0", 10, 0  
+(msg1) "thread1", 10, 0  
+(msg2) "thread2", 10, 0  
+(tid) 0  
+  
+(main)  
+  
+(timer)      // Scheduler  
+// .puttime     // 印出時間  
+@15
+swi
+  
+// tid = (tid + 1) % 3  
+// .opc tid = tid + 1  
+@tid
+D=M
+@1
+D=D+A
+@tid
+M=D
+// .opc tid = tid % 3  
+@tid
+D=M
+@3
+D=D%A
+@tid
+M=D
+  
+// 若 tid==0 跳到 thread0  
+// .opc t0 = tid == 0  
+@tid
+D=M
+@0
+D=D==A
+@t0
+M=D
+// .if t0 goto thread0  
+@t0
+D=M
+@thread0
+D;JNE
+  
+  
+// 若 tid==1 跳到 thread1  
+// .opc t1 = tid == 1  
+@tid
+D=M
+@1
+D=D==A
+@t1
+M=D
+// .if t1 goto thread1  
+@t1
+D=M
+@thread1
+D;JNE
+  
+  
+// 若 tid==2 跳到 thread2  
+// .opc t2 = tid == 2  
+@tid
+D=M
+@2
+D=D==A
+@t2
+M=D
+// .if t2 goto thread2  
+@t2
+D=M
+@thread2
+D;JNE
+  
+// 若都不是，跳回 forever  
+@forever  
+0;JMP  
+  
+// 第一個行程  
+(thread0)  
+// .puts msg0  
+@msg0
+D=A
+@3
+swi
+@forever  
+0;JMP  
+  
+// 第二個行程  
+(thread1)  
+// .puts msg1  
+@msg1
+D=A
+@3
+swi
+@forever  
+0;JMP  
+  
+// 第三個行程  
+(thread2)  
+// .puts msg2  
+@msg2
+D=A
+@3
+swi
+@forever  
+0;JMP  
+  
+// 無窮迴圈，主程式  
+(forever)  
+@forever  
+0;JMP  

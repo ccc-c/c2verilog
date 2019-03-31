@@ -5,7 +5,7 @@
 (lineEnd) 13, 0  
   
 (main)  
-// .seti t1 = 0  
+// .setc t1 = 0  
 @0
 D=A
 @t1
@@ -15,7 +15,7 @@ M=D
 D=M
 @s
 M=D
-// .seti t1 = 1  
+// .setc t1 = 1  
 @1
 D=A
 @t1
@@ -31,7 +31,7 @@ M=D
 D=M
 @t2
 M=D
-// .seti t3 = 10  
+// .setc t3 = 10  
 @10
 D=A
 @t3
@@ -75,7 +75,7 @@ M=D
 D=M
 @t1
 M=D
-// .seti t2 = 1  
+// .setc t2 = 1  
 @1
 D=A
 @t2

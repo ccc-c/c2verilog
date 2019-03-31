@@ -1,0 +1,80 @@
+@main  
+0;JMP  
+@timer  
+0;JMP  
+  
+(msg0) "thread0", 10, 0  
+(msg1) "thread1", 10, 0  
+(msg2) "thread2", 10, 0  
+(tid) 0  
+(threadPc) 0 0 0  
+  
+(main)  
+  
+(timer)     // Scheduler  
+@tid  
+D = M  
+@threadPc  
+A = D+M     // A = threadPc+tid  
+@ILR  
+M = ILR     // 保存返回點 m[threadPc+tid] = ILR = 該程式停止位置的後一行 (返回點)  
+  
+@tid  
+MD = M+1    // tid++  
+@threadPc  
+A = D+M     // A = threadPc+tid  
+PC = M      // 回復下一個 thread 的執行  
+  
+// 第一個行程  
+(thread0)  
+@msg1  
+D=A  
+@pmsg  
+M=D  
+// .call busyLoop  
+@busyLoop
+call
+  
+// 第二個行程  
+(thread1)  
+@msg1  
+D=A  
+@pmsg  
+M=D  
+// .call busyLoop  
+@busyLoop
+call
+  
+// 第三個行程  
+(thread2)  
+@msg1  
+D=A  
+@pmsg  
+M=D  
+// .call busyLoop  
+@busyLoop
+call
+  
+(busyLoop)  
+// .puts pmsg  
+@pmsg
+D=A
+@3
+swi
+  
+// delay 10000  
+@10000   
+D=A  
+(delay)  
+D=D-1  
+@delay  
+D;JLE  
+  
+// .goto busyLoop  
+@busyLoop
+0;JMP
+  
+// 無窮迴圈，主程式  
+(forever)  
+@forever    
+0;JMP  

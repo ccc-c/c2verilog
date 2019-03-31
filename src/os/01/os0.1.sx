@@ -1,0 +1,28 @@
+@resetHandler  
+0;JMP  
+@timerHandler  
+0;JMP  
+  
+(msg) "hello", 10, 0  
+  
+(resetHandler)  
+// .setc CR1 = 10000  
+@10000
+D=A
+@CR1
+M=D
+(forever)  
+@forever  
+0;JMP  
+  
+(timerHandler)  
+// .puts msg  
+@msg
+D=A
+@3
+swi
+// .puttime  
+@15
+swi
+iret  
+  
