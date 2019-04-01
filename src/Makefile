@@ -1,10 +1,13 @@
 CC := gcc
 CFLAGS = -std=c99 -O0 -Wall 
-TARGET = cc1 as1 vm1 ma2 as2 vm2 as3 vm3
+ALL = cc1 cc2 ma1 ma2 as1 as2 as3 vm1 vm2 vm3
+NEW = cc2 ma2 as3 vm3
 BIN = ../bin
 LIB = lib/util.c lib/map.c lib/strTable.c
 
-all: $(TARGET)
+new: $(NEW)
+
+all: $(ALL)
 
 cc1: cc/1/cc.c cc/1/lexer.c cc/1/compiler.c ir/1/ir.c ir/1/irvm.c ir/1/ir2m.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
@@ -29,6 +32,9 @@ vm2: vm/2/vm.c vm/2/vmExt.c $(LIB)
 
 vm3: vm/3/vm.c $(LIB)
 	$(CC) -D_VM_EXT_ -g $(CFLAGS) $^ -o $(BIN)/$@
+
+ma1: ma/1/macro.c $(LIB)
+	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
 ma2: ma/2/macro.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
