@@ -21,14 +21,17 @@ M=D
 (LF) 10, 0  
   
 // =========== iFile: os/02/time.mx ==============
-(timeMsg) "timerHandler: time=", 10, 0  
+(timeMsg) "timerHandler: time=", 0  
   
 (timerHandler)  
 // .puts timeMsg  
+@timeMsg
+D=A
+@3
+swi
 // .puttime  
 @15
 swi
-// .puts timeMsg  
 // .puts LF  
 @LF
 D=A

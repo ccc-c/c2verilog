@@ -15,9 +15,13 @@ int putstr(int16_t *str) {
   return p-str;
 }
 
+char cJump = 0;
+
 // ALU: C 型指令的 cTable 之處理, 也就是T = X op Y 的狀況 
 int alu(int16_t c, int16_t AM) {
   int16_t out = 0;
+  cJump = 0;
+
   switch (c) {
     case 0x00: out = D&AM; break; // "D&AM","000000"
     case 0x02: out = D+AM; break; // "D+AM","000010"
@@ -60,7 +64,22 @@ int aluExt(int16_t c, int16_t AM) {
     // 0x2A 已被 out = 0 使用
     case 0x2B: out = (D != AM);  break; // 不等於
     case 0x2C: out = (D ^ AM);   break; // xor
-    default: error("alu + aluExt: c=%hX not found!\n", c);
+    // 中斷與呼叫指令
+    case 0x2D: LR = PC; PC=A; cJump = 1; break; // {"call", "101101"}, PC 原本就加過 1 了，不用重複加。
+    case 0x2E: PC = LR; cJump = 1; break;   // {"ret", "101110"}
+    case 0x2F: swi(A, D); break;     // 0x30-33 已被使用，以下從 0x34-0x36, 0x38-0x39, 0x3B-0x3E 可用
+    case 0x34: // {"iret", "110100"}
+      // if (inInterrupt) printf("iret: iCount = %d A=%04X D=%04X PC=%04X I=%04hX\n", iCount, A, D, PC, I);
+      if (isDebug) printf("\n .... (iCount=%d, savedA=%04hX savedD=%04hX ILR=%04hX) ", iCount, savedA, savedD, ILR);
+      A = savedA;
+      D = savedD;
+      PC = ILR;
+      cJump = 1;
+      if (isDebug) printf(" => (A=%04hX D=%04hX, PC=%04hX)\n", A, D, PC);
+      // if (inInterrupt) printf("iret: iCount = %d A=%04X D=%04X PC=%04X I=%04hX\n", iCount, A, D, PC, I);
+      inInterrupt = 0;
+      break;
+    default: error("alu+aluExt: c=%02x not found !", c);
   }
   return out;
 }
@@ -107,30 +126,17 @@ void swi(int16_t A, int16_t D) {
   }
 }
 
-// 擴充的 C 型指令集
-int cInstrExt(int16_t c) {
-  int isExt = 0;
-  switch (c) {
-    case 0x2D: LR = PC; PC=A; isExt=1; break; // {"call", "101101"}
-    case 0x2E: PC = LR; isExt = 1; break;     // {"ret", "101110"}
-    case 0x2F: swi(A, D); isExt = 1; break;   // 0x30-33 已被使用，以下從 0x34-0x36, 0x38-0x39, 0x3B-0x3E 可用
-    case 0x34: // {"iret", "110100"}
-      A = savedA;
-      D = savedD;
-      PC = ILR;
-      inInterrupt = 0;
-      isExt = 1;
-      break;
-  }
-  return isExt;
-}
-
 // 處理 C 型指令
-void cInstr(int16_t a, int16_t c, int16_t d, int16_t j) {
-  if (cInstrExt(c)) return; // 如果是擴充指令，就不需要再做傳統的 C 指令動作了！
-
+void cInstr(int16_t a, int16_t c, int16_t d, int16_t j) { // int16_t i, 
   int AM = (a == 0) ? A : m[A];
+
   int16_t aluOut = alu(c, AM);
+
+  if (isDebug) printf(" (cJump=%d aluOut=%d) ", cJump, aluOut);
+  if (cJump) {
+    if (isDebug) printf(" ==> A=%d return", A);
+    return; // 如果該擴充指令是跳躍型的，會改變 PC 值，就不需要再寫入 AMD 與遵照跳躍指令了！
+  }
 
   if (BIT(d, 2)) A = aluOut;
   if (BIT(d, 1)) D = aluOut;
@@ -147,13 +153,21 @@ void cInstr(int16_t a, int16_t c, int16_t d, int16_t j) {
     case 0x7: PC = A; break;                  // JMP
     default: error("cInstr() : j=%d not found !", j);
   }
+
 }
 
-// 時間中斷處理，每隔 CR1 = IPERIOD 的時間就中斷一次，讓作業系統有機會取回控制權！
+// 時間中斷處理
+// 問題: 如果前一個是跳躍指令，那就已經跳過去了，此時中斷也不會改變跳躍狀況！
+
 int interrupt() {
   iCount ++; // 已執行指令數
-  uint32_t tiPeriod = ((uint32_t) CR1) << 12; // 快速的乘 4096
+  // if (iCount % 10000 == 0) printf("iCount = %d\n", iCount);
+  if (isDebug) printf(" (iCount=%d, savedA=%04hX savedD=%04hX) ", iCount, savedA, savedD);
+  uint32_t tiPeriod = ((uint32_t) CR1) << 12; // 快速的乘以 4096
   if (!inInterrupt /* 不允許中斷重入 */ && (tiPeriod > 0) && (iCount % tiPeriod == 0)) {
+    printf("interrupt: iCount = %d A=%04X D=%04X PC=%04X I=%04hX\n", iCount, A, D, PC, I);
+    // 保存暫存器以便返回時恢復
+    // isDebug = 1;
     savedA = A;
     savedD = D;
     ILR = PC;
@@ -175,10 +189,14 @@ void cpu() {
     d = (uI & 0x0038) >>  3;
     j = (uI & 0x0007) >>  0;
     cInstr(a, c, d, j);
+    if (isDebug) printf("(cInstr:After A=%04hX)", A);
   } else if ((uI & 0x8000) == 0) { // A 指令
     A = I;
   } else {
     error("cpu(): not A or C command !");
+  }
+  if (inInterrupt) {
+    // printf("PC=%04hX I=%04hX A=%04hX D=%04hX=%05d m[A]=%04hX\n", PC, I, A, D, D, m[A]);
   }
   debug(" A=%04hX D=%04hX=%05d m[A]=%04hX", A, D, D, m[A]);
   if ((I & 0xE000)==0xE000) debug(" a=%X c=%02X d=%X j=%X", a, c, d, j);
@@ -198,15 +216,15 @@ void run(uint16_t *im, int16_t *m, int imTop) {
 // run: ./vm <file.bin>
 int main(int argc, char *argv[]) {
   argHandle(argc, argv, 2, "./vm <file.ox>\n");
-  // 讀取機器碼檔案
+
   FILE *oFile = fopen(argv[1], "rb");
   if (oFile == NULL) error("vm: oFile %s not found!", argv[1]);
   int imTop = fread(im, sizeof(im[0]), 32768, oFile);
   if (isDebug) { hexDump16(im, imTop); debug("\n"); }
   fclose(oFile);
-  // 啟動後將指令記憶體 im 複製到資料記憶體 m，這樣就不需要存取 im 的指令了。
-  memcpy(m, im, imTop*sizeof(im[0]));
-  // 開始執行虛擬機
+
+  memcpy(m, im, imTop*sizeof(im[0])); // 啟動後將指令記憶體 im 複製到資料記憶體 m，這樣就不需要存取 im 的指令了。
+
   run(im, m, imTop);
   return 0;
 }
