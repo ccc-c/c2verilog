@@ -90,3 +90,8 @@ M=D
 @L1
 0;JMP
 (L2) 
+// .puti s 
+@s
+D=M
+@0
+swi

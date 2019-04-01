@@ -4,7 +4,7 @@
 #include "../../lib/util.h"
 #include "../../lib/strTable.h"
 
-typedef enum { Id, Int, Keyword, Literal, Op, End } TokenType;
+typedef enum { Id, Int, Keyword, String, Op, End } TokenType;
 
 typedef struct {
   TokenType type;

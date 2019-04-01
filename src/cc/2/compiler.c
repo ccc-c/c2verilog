@@ -51,13 +51,21 @@ char *skipType(TokenType type) {
   }
 }
 
+char *skipItem() {
+  if (isNextType(Int) || isNextType(String) || isNextType(Id)) {
+    return next();
+  } else {
+    error("skipItem() got %s fail!\n", tokenTypeName[tnext.type]);
+  }
+}
+
 // F = (E) | Number | Id | CALL
 int F() {
   int f;
   if (isNext("(")) { // '(' E ')'
-    next(); // (
+    skip("("); // (
     f = E();
-    next(); // )
+    skip(")"); // )
   } else { // Number | Id | CALL
     f = nextTemp();
     char *item = next();
@@ -70,7 +78,7 @@ int F() {
 int E() {
   int i1 = F();
   while (isNext("+ - * / & | < > = <= >= == != && ||")) {
-    char *op = next();
+    char *op = skipType(Op);
     int i2 = E();
     int i = nextTemp();
     irEmitOp2(i, i1, op, i2);
@@ -85,9 +93,8 @@ int EXP() {
   return E();
 }
 
-// ASSIGN = id = E
-void ASSIGN() {
-  char *id = next();
+// ASSIGN(id) =  '=' E
+void ASSIGN(char *id) {
   skip("=");
   int e = EXP();
   irEmitAssignSt(id, e);
@@ -127,7 +134,37 @@ void IF() {
   irEmitLabel(ifEnd);
 }
 
-// STMT = WHILE | BLOCK | ASSIGN ;
+// LABEL = id ':'
+void LABEL(char *id) {
+  skip(":");
+  irEmitLabelStr(id);
+}
+
+// GOTO = goto id ;
+void GOTO() {
+  skip("goto");
+  char *id = skipType(Id);
+  skip(";");
+  irEmitGotoStr(id);
+}
+
+// ASM = asm( string (, Item)* ) ;
+void ASM() {
+  skip("asm");
+  skip("(");
+  char *asmCode = skipType(String);
+  char *args[10];
+  int  i=0;
+  while (isNext(",")) {
+    skip(",");
+    args[i++] = skipItem();
+  }
+  skip(")");
+  skip(";");
+  irEmitAsm(asmCode, args);
+}
+
+// STMT = WHILE | IF  | BLOCK | ASM | GOTO | LABEL | ASSIGN ;
 void STMT() {
   if (isNext("while"))
     WHILE();
@@ -135,9 +172,18 @@ void STMT() {
     IF();
   else if (isNext("{"))
     BLOCK();
+  else if (isNext("asm"))
+    ASM();
+  else if (isNext("goto"))
+    GOTO();
   else {
-    ASSIGN();
-    skip(";");
+    char *id = skipType(Id);
+    if (isNext("=")) {
+      ASSIGN(id);
+      skip(";");
+    } else if (isNext(":")) {
+      LABEL(id);
+    }
   }
 }
 

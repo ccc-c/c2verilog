@@ -14,10 +14,14 @@ extern void argHandle(int argc, char *argv[], int argMin, char *msg);
 extern void hexDump16(uint16_t *words, int len);
 extern int  error(char *msg);
 extern void replace(char *str, char *set, char t);
+extern void cstr2text(char *cstr, char *text);
+extern void ltrim(char *str, char *trimStr, char *set);
+extern void rtrim(char *str, char *trimStr, char *set);
+extern void trim(char *str, char *trimStr, char *set);
 extern void htob(char* hex, char* binary);
 extern void itob(int i, char* binary);
 extern int  btoi(char* binary);
-extern void format(char *buf, char *fmt, ...);
+extern void format(char *buf, char *fmt, char *args[]);
 
 #define NMAX 100
 #define SMAX 1000

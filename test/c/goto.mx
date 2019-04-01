@@ -1,0 +1,7 @@
+.goto c200
+.setc t1 = 100
+.set  a = t1
+(c200)
+.setc t1 = 200
+.set  a = t1
+.puti a

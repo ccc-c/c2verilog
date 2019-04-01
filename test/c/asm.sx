@@ -1,0 +1,32 @@
+// =========== iFile: ../test/c/asm.mx ==============
+// .setc t1 = 3 
+@3
+D=A
+@t1
+M=D
+// .set  x = t1 
+@t1
+D=M
+@x
+M=D
+// .setc t1 = 5 
+@5
+D=A
+@t1
+M=D
+// .set  y = t1 
+@t1
+D=M
+@y
+M=D
+// .puti x 
+@x
+D=M
+@0
+swi
+// .puti y 
+@y
+D=M
+@0
+swi
+ 

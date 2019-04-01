@@ -5,4 +5,4 @@ while (i <= 10) {
   s = s + i;
   i = i + 1;
 }
-
+asm(".puti s");

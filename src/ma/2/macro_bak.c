@@ -34,13 +34,12 @@ Map macroMap;
 int expand(char *line, char *code) {
   replace(line, "\r\n", ' ');
   if (line[0] != '.') { sprintf(code, "%s\n", line); return 0; }
-  char p[10][SMAX]; memset(p, 0, sizeof(p));
+  char p[7][SMAX]; memset(p, 0, 6*SMAX);
   sscanf(line, ".%s %s %s %s %s %s", p[0], p[1], p[2], p[3], p[4], p[5]);
   char *macro = mapLookup(&macroMap, p[0]);
   if (!macro) error("macro %s not found!", p[0]);
   char eMacro[TMAX];
-  char *args[] = { p[0], p[1], p[2], p[3], p[4], p[5], NULL };
-  format(eMacro, macro, args);
+  format(eMacro, macro, p[1], p[2], p[3], p[4], p[5]);
   sprintf(code, "// %s\n%s\n", line, eMacro);
   return 1;
 }

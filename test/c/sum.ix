@@ -17,3 +17,4 @@ t3 = t1 + t2
 i = t3
 goto L1
 (L2)
+asm ".puti s"

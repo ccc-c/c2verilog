@@ -11,3 +11,4 @@ goto L2
 t1 = 0
 pass = t1
 (L2)
+asm ".puti pass"

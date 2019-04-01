@@ -1,0 +1,5 @@
+t1 = 3
+x = t1
+t1 = 5
+y = t1
+asm ".puti x\n.puti y\n"

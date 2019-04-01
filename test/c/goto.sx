@@ -1,0 +1,30 @@
+// =========== iFile: ../test/c/goto.mx ==============
+// .goto c200 
+@c200
+0;JMP
+// .setc t1 = 100 
+@100
+D=A
+@t1
+M=D
+// .set  a = t1 
+@t1
+D=M
+@a
+M=D
+(c200) 
+// .setc t1 = 200 
+@200
+D=A
+@t1
+M=D
+// .set  a = t1 
+@t1
+D=M
+@a
+M=D
+// .puti a 
+@a
+D=M
+@0
+swi

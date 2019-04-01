@@ -5,4 +5,4 @@ if (score >= 60)
 else
    pass = 0;
 
-
+asm(".puti pass");

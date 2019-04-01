@@ -1,0 +1,7 @@
+.setc t1 = 3
+.set  x = t1
+.setc t1 = 5
+.set  y = t1
+.puti x
+.puti y
+

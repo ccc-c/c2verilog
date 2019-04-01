@@ -11,3 +11,4 @@
 .setc t1 = 0
 .set  pass = t1
 (L2)
+.puti pass

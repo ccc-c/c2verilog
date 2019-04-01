@@ -1,6 +1,6 @@
 #include "lexer.h"
 
-char *tokenTypeName[6] = {"Id", "Int", "Keyword", "Literal", "Op", "End"};
+char *tokenTypeName[6] = {"Id", "Int", "Keyword", "String", "Op", "End"};
 char *p;
 
 void lexInit(char *code) {
@@ -19,7 +19,7 @@ Token lexScan() {
     p++;
     while (*p != '"') p++;
     p++;
-    t.type = Literal;
+    t.type = String;
   } else if (*p >='0' && *p <='9') { // 數字
     while (*p >='0' && *p <='9') p++;
     t.type = Int;

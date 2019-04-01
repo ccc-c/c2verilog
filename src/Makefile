@@ -1,6 +1,6 @@
 CC := gcc
 CFLAGS = -std=c99 -O0 -Wall 
-TARGET = cc1 ma1 as1 vm1 ma2 as2 vm2 as3 vm3
+TARGET = cc1 as1 vm1 ma2 as2 vm2 as3 vm3
 BIN = ../bin
 LIB = lib/util.c lib/map.c lib/strTable.c
 
@@ -9,7 +9,7 @@ all: $(TARGET)
 cc1: cc/1/cc.c cc/1/lexer.c cc/1/compiler.c ir/1/ir.c ir/1/irvm.c ir/1/ir2m.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
-cc2: cc/2/cc.c cc/2/lexer.c cc/2/compiler.c ir/1/ir.c ir/1/irvm.c ir/1/ir2m.c $(LIB)
+cc2: cc/2/cc.c cc/2/lexer.c cc/2/compiler.c ir/2/ir.c ir/2/irvm.c ir/2/ir2m.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
 as1: as/1/asm.c $(LIB)
@@ -30,9 +30,6 @@ vm2: vm/2/vm.c vm/2/vmExt.c $(LIB)
 vm3: vm/3/vm.c $(LIB)
 	$(CC) -D_VM_EXT_ -g $(CFLAGS) $^ -o $(BIN)/$@
 
-ma1: ma/1/macro.c $(LIB)
-	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
-
 ma2: ma/2/macro.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
@@ -51,13 +48,13 @@ c1Run:
 	$(BIN)/vm3 ../test/c/$(file).ox -d
 
 cRun: 
-	$(BIN)/cc2 ../test/c/$(file) -d
+	$(BIN)/cc2 ../test/c/$(file)
 	$(BIN)/ma2 ../test/c/$(file).mx -o ../test/c/$(file).sx
 	$(BIN)/as3 ../test/c/$(file)
-	$(BIN)/vm3 ../test/c/$(file).ox -d
+	$(BIN)/vm3 ../test/c/$(file).ox
 
 mRun: 
-	$(BIN)/ma1 ../test/m/$(file)
+	$(BIN)/ma2 ../test/m/$(file)
 	$(BIN)/as3 ../test/m/$(file)
 	$(BIN)/vm3 ../test/m/$(file).ox
 
@@ -66,7 +63,7 @@ sRun:
 	$(BIN)/vm3 ../test/m/$(file).ox
 
 osRun: 
-	$(BIN)/ma1 os/$(file)
+	$(BIN)/ma2 os/$(file)
 	$(BIN)/as3 os/$(file)
 	$(BIN)/vm3 os/$(file).ox
 

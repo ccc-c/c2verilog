@@ -32,29 +32,8 @@ int readText(char *fileName, char *text, int size) {
 
 #define ARG_MAX 10
 
-void format(char *buf, char *fmt, ...) {
-  int argMax = 0;
-  char *fp = fmt, *bp = buf;
-  while (*fp != '\0') {
-    if (strncmp(fp, "${",2)==0) {
-      int ai = 0;
-      sscanf(fp, "${%1d}", &ai);
-      if (ai > argMax) argMax = ai;
-      fp += 4;
-    } else {
-      fp ++;
-    }
-  }
-  assert(argMax < ARG_MAX);
-
-  char *args[ARG_MAX];
-  va_list argp; va_start(argp, fmt);
-  for (int i=1; i<=argMax; i++) {
-    args[i] = va_arg(argp, char*);
-  }
-  va_end(argp);
-
-  fp=fmt;
+void format(char *buf, char *fmt, char *args[]) {
+  char *fp=fmt, *bp = buf;;
   while (*fp != '\0') {
     if (strncmp(fp, "${", 2)==0) {
       int ai = 0;
@@ -98,6 +77,45 @@ void replace(char *str, char *set, char t) {
   }
 }
 
+void cstr2text(char *cstr, char *text) {
+  char *s = cstr, *t = text;
+  while (*s != '\0') {
+    if (*s == '\\') {
+      s++;
+      switch (*s) {
+        case 'n': *t = '\n'; break;
+        case 't': *t = '\t'; break;
+        case 'r': *t = '\r'; break;
+        case '\\': *t = '\\'; break;
+        default: error("cstr2text \\%c not support!", *s);
+      }
+      s++;
+      t++;
+    } else {
+      *t++ = *s++;
+    }
+  }
+  *t = '\0';
+}
+
+void ltrim(char *str, char *trimStr, char *set) {
+  char *p = str;
+  while (strchr(set, *p)) p++;
+  strcpy(trimStr, p);
+}
+
+void rtrim(char *str, char *trimStr, char *set) {
+  char *p = str + strlen(str) - 1;
+  while (strchr(set, *p)) p--;
+  strncpy(trimStr, str, p-str);
+  trimStr[p-str+1] = '\0';
+}
+
+void trim(char *str, char *trimStr, char *set) {
+  ltrim(str, trimStr, set);
+  rtrim(trimStr, trimStr, set);
+}
+
 void htob(char* hex, char* binary) {
   for (int i=0; hex[i] != '\0'; i++) {
     char *ptr = strchr(hexDigits, hex[i]);
@@ -121,3 +139,43 @@ int btoi(char* binary) {
   }
   return result;
 }
+
+/*
+void format(char *buf, char *fmt, char *args[]) {
+
+  int argMax = 0;
+  char *fp = fmt, *bp = buf;
+  while (*fp != '\0') {
+    if (strncmp(fp, "${",2)==0) {
+      int ai = 0;
+      sscanf(fp, "${%1d}", &ai);
+      if (ai > argMax) argMax = ai;
+      fp += 4;
+    } else {
+      fp ++;
+    }
+  }
+  assert(argMax < ARG_MAX);
+
+  char *args[ARG_MAX];
+  va_list argp; va_start(argp, fmt);
+  for (int i=1; i<=argMax; i++) {
+    args[i] = va_arg(argp, char*);
+  }
+  va_end(argp);
+  
+  char *fp=fmt, *bp = buf;;
+  while (*fp != '\0') {
+    if (strncmp(fp, "${", 2)==0) {
+      int ai = 0;
+      sscanf(fp, "${%1d}", &ai);
+      strcpy(bp, args[ai]);
+      bp += strlen(args[ai]);
+      fp += 4;
+    } else {
+      *bp++ = *fp++;
+    }
+  }
+  *bp = '\0';
+}
+*/

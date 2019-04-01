@@ -1,0 +1,4 @@
+x = 3;
+y = 5;
+
+asm(".puti x\n.puti y\n");

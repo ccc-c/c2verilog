@@ -1,0 +1,7 @@
+goto c200
+t1 = 100
+a = t1
+(c200)
+t1 = 200
+a = t1
+asm ".puti a"

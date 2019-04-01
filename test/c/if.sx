@@ -56,3 +56,8 @@ D=M
 @pass
 M=D
 (L2) 
+// .puti pass 
+@pass
+D=M
+@0
+swi
