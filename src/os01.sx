@@ -1,22 +1,22 @@
-@main  
+// =========== iFile: os/01/os01.mx ==============
+@resetHandler  
 0;JMP  
-@timer  
+@timerHandler  
 0;JMP  
   
 (msg) "hello", 10, 0  
   
-(main)  
+(resetHandler)  
 // .setc CR1 = 10000  
 @10000
 D=A
 @CR1
 M=D
-// .puti CR1  
 (forever)  
 @forever  
 0;JMP  
   
-(timer)  
+(timerHandler)  
 // .puts msg  
 @msg
 D=A

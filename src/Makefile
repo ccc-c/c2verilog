@@ -60,7 +60,7 @@ cRun:
 	$(BIN)/vm3 ../test/c/$(file).ox
 
 mRun: 
-	$(BIN)/ma2 ../test/m/$(file)
+	$(BIN)/ma2 ../test/m/$(file).mx -o ../test/m/$(file).sx
 	$(BIN)/as3 ../test/m/$(file)
 	$(BIN)/vm3 ../test/m/$(file).ox
 
@@ -68,10 +68,21 @@ sRun:
 	$(BIN)/as3 ../test/m/$(file)
 	$(BIN)/vm3 ../test/m/$(file).ox
 
-osRun: 
-	$(BIN)/ma2 os/$(file)
-	$(BIN)/as3 os/$(file)
-	$(BIN)/vm3 os/$(file).ox
+oRun: 
+	$(BIN)/vm3 ../test/m/$(file).ox
+
+oDebug: 
+	$(BIN)/vm3 ../test/m/$(file).ox -d
+
+os01: 
+	$(BIN)/ma2 os/01/os01.mx -o os/01/os01.sx
+	$(BIN)/as3 os/01/os01
+	$(BIN)/vm3 os/01/os01.ox
+
+os02: 
+	$(BIN)/ma2 os/02/boot.mx os/02/const.mx os/02/time.mx -o os/02/os02.sx
+	$(BIN)/as3 os/02/os02
+	$(BIN)/vm3 os/02/os02.ox
 
 clean:
 	rm -f $(BIN)/*.o $(BIN)/*.exe
