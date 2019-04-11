@@ -13,14 +13,6 @@
 .set  t2 = i
 .setc t3 = 10
 .op   t4 = t2 <= t3
-  0   1  2  3  4  5
-"@${3}\nD=M\n@${5}\nD=D${4}M\n@${1}\nM=D"},
-@t2
-D=M
-@t3
-D=D<=M
-@t4
-M=D
 .ifnot t4 goto L2
 .set  t1 = s
 .set  t2 = i

@@ -2,7 +2,7 @@
 
 void ir2macro(FILE *fp, IR *p) {
   int t=p->t, t1=p->t1, t2=p->t2, label=p->label, slen;
-  char *str = p->str, digit[2], asmText[TMAX], tempText[TMAX];
+  char *str = p->str, asmText[TMAX], tempText[TMAX], digit;
   if (isDebug) irWrite(stdout, p);
   switch (p->type) {
     // case IrCall: error("IrCall"); break;
@@ -11,8 +11,8 @@ void ir2macro(FILE *fp, IR *p) {
       fprintf(fp, ".set  %s = t%d", str, t); // s=t
       break;
     case IrAssignTs:
-      digit[0] = isdigit(*str) ? 'c' : ' ';
-      fprintf(fp, ".set%s t%d = %s", digit, t, str); // t=s
+      digit = isdigit(*str) ? 'c' : ' ';
+      fprintf(fp, ".set%c t%d = %s", digit, t, str); // t=s
       break;
     case IrLabel: // (label)
       fprintf(fp, "(L%d)", label);

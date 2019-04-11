@@ -37,7 +37,7 @@ int expand(char *line, char *code) {
   char p[10][SMAX]; memset(p, 0, sizeof(p));
   sscanf(line, ".%s %s %s %s %s %s", p[0], p[1], p[2], p[3], p[4], p[5]);
   char *macro = mapLookup(&macroMap, p[0]);
-  if (!macro) error("macro %s not found!", p[0]);
+  if (!macro) error("macro %s not found!\n", p[0]);
   char eMacro[TMAX];
   char *args[] = { p[0], p[1], p[2], p[3], p[4], p[5], NULL };
   format(eMacro, macro, args);
