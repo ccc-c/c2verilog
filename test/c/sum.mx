@@ -17,4 +17,3 @@
 .set  i = t3
 .goto L1
 (L2)
-.puti s

@@ -2,7 +2,7 @@
 0;JMP  
 
 (msg) "sum=", 0
-(lineEnd) 13, 0
+(lineEnd) 13, 10, 13, 10, 0
 
 (main)
 .setc t1 = 0
