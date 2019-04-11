@@ -1,7 +1,7 @@
 #include "ir2m.h"
 
 void ir2macro(FILE *fp, IR *p) {
-  int t=p->t, t1=p->t1, t2=p->t2, label=p->label;
+  int t=p->t, t1=p->t1, t2=p->t2, label=p->label, slen;
   char *str = p->str, digit[2], asmText[TMAX], tempText[TMAX];
   if (isDebug) irWrite(stdout, p);
   switch (p->type) {
@@ -33,7 +33,9 @@ void ir2macro(FILE *fp, IR *p) {
       fprintf(fp, ".ifnot t%d goto L%d", t, label);
       break;
     case IrAsm: // asm "...."
-      trim(str, tempText, "\"");
+      slen = strlen(str)-2;
+      strncpy(tempText, &str[1], slen);
+      tempText[slen] = '\0';
       cstr2text(tempText, asmText);
       fprintf(fp, "%s", asmText);
       break;

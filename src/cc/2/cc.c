@@ -15,5 +15,7 @@ int main(int argc, char * argv[]) {
   if (isDebug) irDump();
   irSave(irFile);
   ir2m(mFile);
+  /*
   if (isFlag['r']) irRun();
+  */
 }
