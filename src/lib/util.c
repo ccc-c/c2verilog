@@ -113,7 +113,9 @@ void rtrim(char *str, char *trimStr, char *set) {
 
 void trim(char *str, char *trimStr, char *set) {
   ltrim(str, trimStr, set);
-  rtrim(trimStr, trimStr, set);
+  char tStr[TMAX];
+  rtrim(trimStr, tStr, set);
+  strcpy(trimStr, tStr);
 }
 
 void htob(char* hex, char* binary) {
