@@ -1,17 +1,19 @@
 #include <stdio.h>
 
 int main() {
-  int f1=1, f2=0;
-  int f, n=8, i=2, t;
+  int f1=1; // @1, D=A, @f1, M=D, 
+  int f2=0; // @0, D=A, @f2, M=D,
+  int f, t;
+  int n=8;  // ...
+  int i=2;  // ...
 wbegin:
-  t = i>n;
-  if (t) goto wend;
-  f = f1 + f2;
-  f2 = f1;
-  f1 = f;
-  i = i + 1;
+  if (i>n) goto wend; // @i, D=M, @n, D=D-M, D;JGT
+  f = f1 + f2; // @f1; D=M; @f2; D=D+M; @f; M=D;
+  f2 = f1;  // @f1; D=M; @f2; M=D;
+  f1 = f;   // ...
+  i = i + 1;// ...
   printf("f=%d\n", f);
-  goto wbegin; 
+  goto wbegin; // @wbegin, 0;JMP
 wend:
-  printf("f=%d\n", f);
+  return;
 }
