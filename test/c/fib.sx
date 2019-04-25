@@ -1,0 +1,137 @@
+// =========== iFile: ../test/c/fib.mx ==============
+// .setc t1 = 1 
+@1
+D=A
+@t1
+M=D
+// .set  f1 = t1 
+@t1
+D=M
+@f1
+M=D
+// .setc t1 = 0 
+@0
+D=A
+@t1
+M=D
+// .set  f2 = t1 
+@t1
+D=M
+@f2
+M=D
+// .setc t1 = 8 
+@8
+D=A
+@t1
+M=D
+// .set  n = t1 
+@t1
+D=M
+@n
+M=D
+// .setc t1 = 2 
+@2
+D=A
+@t1
+M=D
+// .set  i = t1 
+@t1
+D=M
+@i
+M=D
+(L1) 
+// .set  t1 = i 
+@i
+D=M
+@t1
+M=D
+// .set  t2 = n 
+@n
+D=M
+@t2
+M=D
+// .op   t3 = t1 <= t2 
+@t1
+D=M
+@t2
+D=D<=M
+@t3
+M=D
+// .ifnot t3 goto L2 
+@t3
+D=M
+@L2
+D;JEQ
+// .set  t1 = f1 
+@f1
+D=M
+@t1
+M=D
+// .set  t2 = f2 
+@f2
+D=M
+@t2
+M=D
+// .op   t3 = t1 + t2 
+@t1
+D=M
+@t2
+D=D+M
+@t3
+M=D
+// .set  f = t3 
+@t3
+D=M
+@f
+M=D
+// .set  t1 = f1 
+@f1
+D=M
+@t1
+M=D
+// .set  f2 = t1 
+@t1
+D=M
+@f2
+M=D
+// .set  t1 = f 
+@f
+D=M
+@t1
+M=D
+// .set  f1 = t1 
+@t1
+D=M
+@f1
+M=D
+// .set  t1 = i 
+@i
+D=M
+@t1
+M=D
+// .setc t2 = 1 
+@1
+D=A
+@t2
+M=D
+// .op   t3 = t1 + t2 
+@t1
+D=M
+@t2
+D=D+M
+@t3
+M=D
+// .set  i = t3 
+@t3
+D=M
+@i
+M=D
+// .goto L1 
+@L1
+0;JMP
+(L2) 
+// .puti f 
+@f
+D=M
+@0
+swi
