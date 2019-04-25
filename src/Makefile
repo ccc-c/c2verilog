@@ -1,7 +1,7 @@
 CC := gcc
 CFLAGS = -std=c99 -O0 -Wall 
-ALL = cc1 cc2 ma1 ma2 as1 as2 as3 vm1 vm2 vm3
-NEW = cc2 ma2 as3 vm3
+ALL = cc1 cc2 cc3 ma1 ma2 as1 as2 as3 vm1 vm2 vm3
+NEW = cc3 ma2 as3 vm3
 BIN = ../bin
 LIB = lib/util.c lib/map.c lib/strTable.c
 
@@ -13,6 +13,9 @@ cc1: cc/1/cc.c cc/1/lexer.c cc/1/compiler.c ir/1/ir.c ir/1/irvm.c ir/1/ir2m.c $(
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
 cc2: cc/2/cc.c cc/2/lexer.c cc/2/compiler.c ir/2/ir.c ir/2/irvm.c ir/2/ir2m.c $(LIB)
+	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
+
+cc3: cc/3/cc.c cc/3/lexer.c cc/3/compiler.c ir/3/ir.c ir/3/irvm.c ir/3/ir2m.c $(LIB)
 	$(CC) $(CFLAGS) $^ -o $(BIN)/$@
 
 as1: as/1/asm.c $(LIB)
@@ -48,8 +51,17 @@ c1Run:
 	$(BIN)/as3 ../test/c/$(file)
 	$(BIN)/vm3 ../test/c/$(file).ox -d
 
-cRun: 
+c2Run: 
 	$(BIN)/cc2 ../test/c/$(file)
+	$(BIN)/ma2 ../test/c/$(file).mx -o ../test/c/$(file).sx
+	$(BIN)/as3 ../test/c/$(file)
+	$(BIN)/vm3 ../test/c/$(file).ox
+
+c2ir: 
+	$(BIN)/cc3 ../test/c/$(file) -d
+
+cRun: 
+	$(BIN)/cc3 ../test/c/$(file)
 	$(BIN)/ma2 ../test/c/$(file).mx -o ../test/c/$(file).sx
 	$(BIN)/as3 ../test/c/$(file)
 	$(BIN)/vm3 ../test/c/$(file).ox

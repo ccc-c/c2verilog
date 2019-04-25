@@ -2,6 +2,7 @@
 #define __IR_H__
 
 #include <stdio.h>
+#include "../../lib/strTable.h"
 #include "../../lib/map.h"
 #include "../../lib/util.h"
 
@@ -10,12 +11,13 @@
 #define VAR_MAX 10000
 #define IR_MAX  10000
 
-typedef enum { IrAssignSt, IrAssignTs, IrOp2, IrCall1, IrLabel, IrLabelStr, IrGoto, IrGotoStr, IrIfGoto, IrIfNotGoto, IrCall, IrArg } IrType;
+typedef enum { IrAssignSt, IrAssignTs, IrOp2, IrCall1, IrLabel, IrLabelStr, IrGoto, IrGotoStr, IrIfGoto, IrIfNotGoto, IrAsm, IrCall, IrArg, IrReturn } IrType;
 
 typedef struct {
   IrType type;
   int t, t1, t2, label;
-  char *s, *op, *labelStr;
+  // char *s, *op, *labelStr;
+  char *str;
 } IR;
 
 
@@ -29,6 +31,7 @@ extern void irRun();
 extern void irPrint(IR *p);
 extern void irEmitArg(int t1) ;
 extern void irEmitCall(char *fname, int t1);
+extern void irEmitReturn(int t);
 extern void irEmitAssignTs(int t, char *s);
 extern void irEmitAssignSt(char *s, int t);
 extern void irEmitOp2(int t, int p1, char *op, int p2);
@@ -38,6 +41,7 @@ extern void irEmitGoto(int label);
 extern void irEmitGotoStr(char *id);
 extern void irEmitIfGoto(int t, int label);
 extern void irEmitIfNotGoto(int t, int label);
+extern void irEmitAsm(char *asmCode, char *args[]);
 extern void irWrite(FILE *fp, IR *p);
 extern void irSave(char *fname);
 extern void irDump();
