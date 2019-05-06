@@ -1,0 +1,28 @@
+.setc t1 = 1
+.set  f1 = t1
+.setc t1 = 0
+.set  f2 = t1
+.setc t1 = 8
+.set  n = t1
+.setc t1 = 2
+.set  i = t1
+(L1)
+.set  t1 = i
+.set  t2 = n
+.op   t3 = t1 <= t2
+.ifnot t3 goto L2
+.set  t1 = f1
+.set  t2 = f2
+.op   t3 = t1 + t2
+.set  f = t3
+.set  t1 = f1
+.set  f2 = t1
+.set  t1 = f
+.set  f1 = t1
+.set  t1 = i
+.setc t2 = 1
+.op   t3 = t1 + t2
+.set  i = t3
+.goto L1
+(L2)
+.puti f
