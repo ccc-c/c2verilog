@@ -53,15 +53,8 @@ void irEmitIfNotGoto(int t, int label) {
 }
 
 void irEmitAsm(char *asmCode, char *args[]) {
-  // char eCode[TMAX];
-  /*
-  format(eCode, asmCode, args);
-  printf("macro=%s eCode=%s\n", asmCode, eCode);
-  */
-  // cstr2text(asmCode, eCode);
   char *code = stAdd(asmCode);
   irNew((IR) {.type=IrAsm, .str=code });
-  // irNew((IR) {.type=IrAsm, .t=t, .label=label});
 }
 
 void irWrite(FILE *fp, IR *p) {

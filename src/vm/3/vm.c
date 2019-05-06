@@ -102,6 +102,9 @@ void swi(int16_t A, int16_t D) {
     case 0x16: // swi 22: fdiv
       F /= *(float*) &m[D];
       break;
+    case 0xFF: // swi 255: exit
+      exit(0);
+      break;
     default:
       error("swi A=%04x not found !", A);
   }

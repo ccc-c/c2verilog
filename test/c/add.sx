@@ -1,0 +1,136 @@
+// =========== iFile: ../test/c/add.mx ==============
+// .setc t1 = 3 
+@3
+D=A
+@t1
+M=D
+// .set  a = t1 
+@t1
+D=M
+@a
+M=D
+// .setc t1 = 5 
+@5
+D=A
+@t1
+M=D
+// .set  b = t1 
+@t1
+D=M
+@b
+M=D
+// .set  t2 = a 
+@a
+D=M
+@t2
+M=D
+// .set  t3 = b 
+@b
+D=M
+@t3
+M=D
+// .arg  t2 0 
+// t=SP-0
+@0
+D=A
+@SP
+D=M-D
+@t
+M=D
+// *t=t2
+@t2
+D=M
+@t
+A=M
+M=D
+// .arg  t3 1 
+// t=SP-1
+@1
+D=A
+@SP
+D=M-D
+@t
+M=D
+// *t=t3
+@t3
+D=M
+@t
+A=M
+M=D
+// .call add t4 L1 
+// push L1
+@L1
+D=M
+@SP
+M=D
+@SP
+M=M+1
+// goto add
+@add
+0;JMP
+(L1)
+// t4=D
+@t4
+M=D
+// .set  c = t4 
+@t4
+D=M
+@c
+M=D
+// .puti c 
+@c
+D=M
+@0
+swi
+// .exit 
+@255
+swi
+// .function add 
+(_add)
+// push FP
+@FP
+D=M
+@SP
+M=D
+M=M+1
+// FP=SP
+@SP
+D=M
+@FP
+M=D
+// .param x 
+
+// .param y 
+
+// .set  t1 = x 
+@x
+D=M
+@t1
+M=D
+// .set  t2 = y 
+@y
+D=M
+@t2
+M=D
+// .op   t3 = t1 + t2 
+@t1
+D=M
+@t2
+D=D+M
+@t3
+M=D
+// .ret t3 
+@SP
+M=M-1
+@SP
+A=M
+A=M
+0;JMP
+// .fend add 
+// ret
+@SP
+M=M-1
+@SP
+A=M
+A=M
+0;JMP

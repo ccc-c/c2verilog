@@ -1,0 +1,8 @@
+a=3;
+b=5;
+c = add(a,b);
+asm(".puti c\n.exit");
+
+def add(x, y) {
+  return x+y;
+}

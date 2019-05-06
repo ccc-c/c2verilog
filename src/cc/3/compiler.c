@@ -6,6 +6,7 @@ int  E();
 void STMT();
 void IF();
 void BLOCK();
+void FUNCTION();
 
 Token tnow, tnext;
 
@@ -76,10 +77,11 @@ int CALL(char *fname) {
   }
   skip(")");
   for (int i=0; i<top; i++) {
-    irEmitArg(args[i]);
+    irEmitArg(args[i], i);
   }
   int r = nextTemp();
-  irEmitCall(fname, r);
+  int retLabel = nextLabel();
+  irEmitCall(fname, r, retLabel);
   return r;
 }
 
@@ -215,6 +217,8 @@ void STMT() {
     GOTO();
   else if (isNext("return"))
     RETURN();
+  else if (isNext("def"))
+    FUNCTION();
   else {
     char *id = skipType(Id);
     if (isNext("=")) {
@@ -243,58 +247,28 @@ void BLOCK() {
   skip("}");
 }
 
-/*
-void PARAM() {
-  char *type = skipType(Type);
-  char *star = "";
-  if (isNext("*")) star = skip("*");
-  char *id = skipType(Id);
-  irEmitParam(id, typeStar(type, star), "");
-}
-
-// PROG = (INCLUDE | DECL | FUNCTION)*
-// INCLUDE  = #...>
-// FUNCTION = type id (PARAM_LIST) BLOCK
-// DECL     = type id (, id)* ;
-void PROG() {
-  next();
-  while (!isEnd()) {
-    if (isNext("#")) { // INCLUDE
-      while (!isNext(">")) next();
-      skip(">");
-      continue;
-    }
-    char *type = skipType(Type);
-    char *star = "";
-    if (isNext("*")) star = skip("*");
+// PARAMS = id {,id}*
+void PARAMS() {
+  while (isNextType(Id)) {
+    if (isNext(")")) break;
     char *id = skipType(Id);
-    if (isNext("(")) { // FUNCTION = type id (PARAM_LIST) BLOCK
-      vmCode("function", id, typeStar(type, star), "");
-      skip("(");
-      if (!isNext(")")) {
-        PARAM();
-        while (!isNext(")")) {
-          skip(",");
-          PARAM();
-        }
-      }
-      skip(")");
-      BLOCK(Local);
-      vmCode("-function", id, "", "");
-    } else { // DECL = type *? id (, *? id)* ;
-      vmGlobal("global", id, typeStar(type, star), "");
-      while (isNext(",")) {
-        skip(",");
-        star = "";
-        if (isNext("*")) star = skip("*");
-        id = skipType(Id);
-        vmGlobal("global", id, typeStar(type, star), "");
-      }
-      skip(";");
-    }
+    irEmitParam(id);
+    if (isNext(",")) skip(",");
   }
 }
-*/
+
+// FUNCTION = def id (PARAMS) BLOCK
+void FUNCTION() {
+  skip("def");
+  char *id = skipType(Id);
+  irEmitFunction(id);
+  skip("(");
+  PARAMS();
+  skip(")");
+  BLOCK();
+  irEmitFend(id);
+}
+
 // PROG = STMT*
 void PROG() {
   STMTS();

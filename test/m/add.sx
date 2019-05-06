@@ -1,0 +1,87 @@
+// .setc  a = 3 
+@t1
+D=M
+@a
+M=D
+// .set  b = 5 
+@t1
+D=M
+@b
+M=D
+// .call add t4 L1 
+// push L1
+@L1
+D=M
+@SP
+M=D
+@SP
+M=M+1
+// goto add
+@add
+0;JMP
+(L1)
+// t4=D
+@t4
+M=D
+// .set  c = t4 
+@t4
+D=M
+@c
+M=D
+// .puti c 
+@c
+D=M
+@0
+swi
+// .exit 
+@255
+swi
+// .function add 
+(add)
+// push FP
+@FP
+D=M
+@SP
+M=D
+M=M+1
+// FP=SP
+@SP
+D=M
+@FP
+M=D
+// .param x 
+
+// .param y 
+
+// .set  t1 = x 
+@x
+D=M
+@t1
+M=D
+// .set  t2 = y 
+@y
+D=M
+@t2
+M=D
+// .op   t3 = t1 + t2 
+@t1
+D=M
+@t2
+D=D+M
+@t3
+M=D
+// .ret t3 
+@SP
+M=M-1
+@SP
+A=M
+A=M
+0;JMP
+// .fend add 
+// ret
+@SP
+M=M-1
+@SP
+A=M
+A=M
+0;JMP

@@ -1,0 +1,26 @@
+.set  t1 = n
+.arg  t1 0
+.call sum t2 L1
+.function sum
+.param n
+.setc t1 = 0
+.set  s = t1
+.setc t1 = 1
+.set  i = t1
+(L2)
+.set  t1 = i
+.setc t2 = 10
+.op   t3 = t1 <= t2
+.ifnot t3 goto L3
+.set  t1 = s
+.set  t2 = i
+.op   t3 = t1 + t2
+.set  s = t3
+.set  t1 = i
+.setc t2 = 1
+.op   t3 = t1 + t2
+.set  i = t3
+.goto L2
+(L3)
+.puti s
+.fend sum

@@ -1,0 +1,44 @@
+// =========== iFile: ../test/m/addGlobalLR.mx ==============
+// .setc a = 3  
+@3
+D=A
+@a
+M=D
+// .setc b = 5  
+@5
+D=A
+@b
+M=D
+// .call add  
+// .setc LR = L1  
+@L1
+D=A
+@LR
+M=D
+// .goto add  
+@add
+0;JMP
+(L1)  
+  
+// .puti c  
+@c
+D=M
+@0
+swi
+// .exit   
+@255
+swi
+  
+// .function add   
+(add)  
+// .op   c = a + b   
+@a
+D=M
+@b
+D=D+M
+@c
+M=D
+// ret  
+@LR  
+A=M  
+0;JMP

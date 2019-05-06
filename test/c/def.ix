@@ -1,0 +1,26 @@
+t1 = n
+arg t1
+call sum t2 L1
+function sum
+param n
+t1 = 0
+s = t1
+t1 = 1
+i = t1
+(L2)
+t1 = i
+t2 = 10
+t3 = t1 <= t2
+ifnot t3 goto L3
+t1 = s
+t2 = i
+t3 = t1 + t2
+s = t3
+t1 = i
+t2 = 1
+t3 = t1 + t2
+i = t3
+goto L2
+(L3)
+asm ".puti s"
+fend sum

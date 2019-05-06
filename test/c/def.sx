@@ -1,0 +1,154 @@
+// =========== iFile: ../test/c/def.mx ==============
+// .set  t1 = n 
+@n
+D=M
+@t1
+M=D
+// .arg  t1 0 
+// t=SP-0
+@0
+D=A
+@SP
+D=M-D
+@t
+M=D
+// *t=t1
+@t1
+D=M
+@t
+A=M
+M=D
+// .call sum t2 L1 
+// push L1
+@L1
+D=M
+@SP
+M=D
+@SP
+M=M+1
+// goto sum
+@sum
+0;JMP
+(L1)
+// t2=D
+@t2
+M=D
+// .function sum 
+(_sum)
+// push FP
+@FP
+D=M
+@SP
+M=D
+M=M+1
+// FP=SP
+@SP
+D=M
+@FP
+M=D
+// .param n 
+
+// .setc t1 = 0 
+@0
+D=A
+@t1
+M=D
+// .set  s = t1 
+@t1
+D=M
+@s
+M=D
+// .setc t1 = 1 
+@1
+D=A
+@t1
+M=D
+// .set  i = t1 
+@t1
+D=M
+@i
+M=D
+(L2) 
+// .set  t1 = i 
+@i
+D=M
+@t1
+M=D
+// .setc t2 = 10 
+@10
+D=A
+@t2
+M=D
+// .op   t3 = t1 <= t2 
+@t1
+D=M
+@t2
+D=D<=M
+@t3
+M=D
+// .ifnot t3 goto L3 
+@t3
+D=M
+@L3
+D;JEQ
+// .set  t1 = s 
+@s
+D=M
+@t1
+M=D
+// .set  t2 = i 
+@i
+D=M
+@t2
+M=D
+// .op   t3 = t1 + t2 
+@t1
+D=M
+@t2
+D=D+M
+@t3
+M=D
+// .set  s = t3 
+@t3
+D=M
+@s
+M=D
+// .set  t1 = i 
+@i
+D=M
+@t1
+M=D
+// .setc t2 = 1 
+@1
+D=A
+@t2
+M=D
+// .op   t3 = t1 + t2 
+@t1
+D=M
+@t2
+D=D+M
+@t3
+M=D
+// .set  i = t3 
+@t3
+D=M
+@i
+M=D
+// .goto L2 
+@L2
+0;JMP
+(L3) 
+// .puti s 
+@s
+D=M
+@0
+swi
+// .fend sum 
+// ret
+@SP
+M=M-1
+@SP
+A=M
+A=M
+0;JMP

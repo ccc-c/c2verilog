@@ -8,18 +8,6 @@ void irNew(IR p) {
   ir[irTop++] = p;
 }
 
-void irEmitCall(char *fname, int t) {
-  irNew((IR) {.type=IrCall, .str=fname, .t=t});
-}
-
-void irEmitReturn(int t) {
-  irNew((IR) {.type=IrReturn, .t=t});
-}
-
-void irEmitArg(int t) {
-  irNew((IR) {.type=IrArg, .t=t});
-}
-
 void irEmitAssignTs(int t, char *s) {
   irNew((IR) {.type=IrAssignTs, .t=t, .str=s});
 }
@@ -61,10 +49,33 @@ void irEmitAsm(char *asmCode, char *args[]) {
   irNew((IR) {.type=IrAsm, .str=code });
 }
 
+void irEmitArg(int t, int i) {
+  irNew((IR) {.type=IrArg, .t=t, .t1=i});
+}
+
+void irEmitCall(char *fname, int t, int label) {
+  irNew((IR) {.type=IrCall, .str=fname, .t=t, .label=label});
+}
+
+void irEmitReturn(int t) {
+  irNew((IR) {.type=IrReturn, .t=t});
+}
+
+void irEmitParam(char *name) {
+  irNew((IR) {.type=IrParam, .str=name });
+}
+
+void irEmitFunction(char *name) {
+  irNew((IR) {.type=IrFunction, .str=name });
+}
+
+void irEmitFend(char *name) {
+  irNew((IR) {.type=IrFend, .str=name });
+}
+
 void irWrite(FILE *fp, IR *p) {
+  // printf("p->str=%s\n", p->str);
   switch (p->type) {
-    case IrCall: fprintf(fp, "call %s t%d", p->str, p->t); break;
-    case IrArg:  fprintf(fp, "arg t%d", p->t); break;
     case IrAssignSt: fprintf(fp, "%s = t%d", p->str, p->t); break;
     case IrAssignTs: fprintf(fp, "t%d = %s", p->t, p->str); break;
     case IrLabel: fprintf(fp, "(L%d)", p->label); break;
@@ -75,6 +86,12 @@ void irWrite(FILE *fp, IR *p) {
     case IrIfNotGoto: fprintf(fp, "ifnot t%d goto L%d", p->t, p->label); break;
     case IrAsm: fprintf(fp, "asm %s", p->str); break;
     case IrOp2: fprintf(fp, "t%d = t%d %s t%d", p->t, p->t1, p->str, p->t2); break;
+    case IrCall: fprintf(fp, "call %s t%d L%d", p->str, p->t, p->label); break;
+    case IrArg:  fprintf(fp, "arg t%d", p->t); break;
+    case IrParam: fprintf(fp, "param %s", p->str); break;
+    case IrFunction: fprintf(fp, "function %s", p->str); break;
+    case IrFend: fprintf(fp, "fend %s", p->str); break;
+    case IrReturn: fprintf(fp, "return t%d", p->t); break;
     default: error("ir.type %d not found!", p->type);
   }
   fprintf(fp, "\n");

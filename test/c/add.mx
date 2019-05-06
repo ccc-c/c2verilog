@@ -1,0 +1,20 @@
+.setc t1 = 3
+.set  a = t1
+.setc t1 = 5
+.set  b = t1
+.set  t2 = a
+.set  t3 = b
+.arg  t2 0
+.arg  t3 1
+.call add t4 L1
+.set  c = t4
+.puti c
+.exit
+.function add
+.param x
+.param y
+.set  t1 = x
+.set  t2 = y
+.op   t3 = t1 + t2
+.ret t3
+.fend add

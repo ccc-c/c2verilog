@@ -1,0 +1,54 @@
+// =========== iFile: ../test/m/addGlobalCall.mx ==============
+// .setc a = 3  
+@3
+D=A
+@a
+M=D
+// .setc b = 5  
+@5
+D=A
+@b
+M=D
+// .call add t L1  
+// setc LR = L1
+@L1
+D=A
+@LR
+M=D
+// .goto f
+@add
+0;JMP
+(L1)
+// setc t = RT
+@RT
+D=M
+@t
+M=D
+// .puti t  
+@t
+D=M
+@0
+swi
+// .exit   
+@255
+swi
+  
+// .function add  
+(add)
+// .op  c = a + b   
+@a
+D=M
+@b
+D=D+M
+@c
+M=D
+// .ret c  
+// set RT = c
+@c
+D=M
+@RT
+M=D
+// ret
+@LR
+A=M
+0;JMP

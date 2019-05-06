@@ -1,0 +1,64 @@
+// =========== iFile: ../test/m/addGlobalSP.mx ==============
+// .setc SP = 1000  
+@1000
+D=A
+@SP
+M=D
+// .setc a = 3  
+@3
+D=A
+@a
+M=D
+// .setc b = 5  
+@5
+D=A
+@b
+M=D
+// .call add  
+// .pushc L1  
+@L1
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// .setc LR = L1  
+// .goto add  
+@add
+0;JMP
+(L1)  
+  
+// .puti c  
+@c
+D=M
+@0
+swi
+// .exit   
+@255
+swi
+  
+// .function add   
+(add)  
+// .op   c = a + b   
+@a
+D=M
+@b
+D=D+M
+@c
+M=D
+// ret  
+// .pop retAddress  
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@retAddress
+M=D
+@retAddress  
+A=M  
+0;JMP  
+// @LR  
+// A=M  
+// 0;JMP

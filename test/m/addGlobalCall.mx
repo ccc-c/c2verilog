@@ -1,0 +1,9 @@
+.setc a = 3
+.setc b = 5
+.call add t L1
+.puti t
+.exit 
+
+.function add
+.op  c = a + b 
+.ret c

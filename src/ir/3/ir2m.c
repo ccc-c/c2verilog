@@ -5,12 +5,6 @@ void ir2macro(FILE *fp, IR *p) {
   char *str = p->str, asmText[TMAX], tempText[TMAX], digit;
   if (isDebug) irWrite(stdout, p);
   switch (p->type) {
-    case IrCall:
-      fprintf(fp, ".call %s t%d", str, t); // t = call fname
-      break;
-    case IrArg:
-      fprintf(fp, ".arg  t%d", t); // arg t
-      break;
     case IrAssignSt:
       fprintf(fp, ".set  %s = t%d", str, t); // s=t
       break;
@@ -45,6 +39,24 @@ void ir2macro(FILE *fp, IR *p) {
       break;
     case IrOp2: // t = t1 op t2
       fprintf(fp, ".op   t%d = t%d %s t%d", t, t1, str, t2);
+      break;
+    case IrCall:
+      fprintf(fp, ".call %s t%d L%d", str, t, label); // t = call fname retLabel
+      break;
+    case IrArg:
+      fprintf(fp, ".arg  t%d %d", t, t1); // arg t
+      break;
+    case IrParam:
+      fprintf(fp, ".param %s", p->str);
+      break;
+    case IrFunction:
+      fprintf(fp, ".function %s", p->str);
+      break;
+    case IrFend:
+      fprintf(fp, ".fend %s", p->str);
+      break;
+    case IrReturn:
+      fprintf(fp, ".ret t%d", p->t);
       break;
     default: 
       error("ir.type %d not found!", p->type);

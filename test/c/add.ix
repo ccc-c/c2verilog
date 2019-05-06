@@ -1,0 +1,19 @@
+t1 = 3
+a = t1
+t1 = 5
+b = t1
+t2 = a
+t3 = b
+arg t2
+arg t3
+call add t4 L1
+c = t4
+asm ".puti c\n.exit"
+function add
+param x
+param y
+t1 = x
+t2 = y
+t3 = t1 + t2
+return t3
+fend add
