@@ -4,6 +4,6 @@
 .puti c
 .exit 
 
-.function add
+(add)
 .op  c = a + b
-.ret
+ret

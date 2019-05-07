@@ -1,0 +1,89 @@
+// =========== iFile: ../test/m/cCall.mx ==============
+// .setc SP = 1000 
+@1000
+D=A
+@SP
+M=D
+// .setc a = 3 
+@3
+D=A
+@a
+M=D
+// .setc b = 5 
+@5
+D=A
+@b
+M=D
+// .call main 
+@main
+call
+// .puti c 
+@c
+D=M
+@0
+swi
+// .exit 
+@255
+swi
+ 
+// .function main 
+(main)
+// .push LR
+@LR
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// .push FP
+@FP
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// .set FP = SP
+@SP
+D=M
+@FP
+M=D
+// .opc SP = SP + 16
+@SP
+D=M
+@16
+D=D+A
+@SP
+M=D
+// .op c = a + b 
+@a
+D=M
+@b
+D=D+M
+@c
+M=D
+// .fend 
+// .set SP = FP
+@FP
+D=M
+@SP
+M=D
+// .pop FP
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@FP
+M=D
+// .pop LR
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@LR
+M=D
+ret
+ 

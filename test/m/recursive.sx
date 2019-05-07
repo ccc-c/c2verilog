@@ -1,22 +1,24 @@
 // =========== iFile: ../test/m/recursive.mx ==============
-// .setc SP = 1000  
+// .setc SP = 1000 
 @1000
 D=A
 @SP
 M=D
-// .call main  
+// .call main 
 @main
 call
-// .exit  
+// .exit 
 @255
 swi
-  
-(rmsg) "r=", 0  
-(nmsg) "n=", 0  
-  
-// .function main  
+ 
+(tmsg) "t=", 0 
+(rmsg) "r=", 0 
+(nmsg) "n=", 0 
+(fmsg) "f(5)=", 0 
+ 
+// .function main 
 (main)
-// .push LR  
+// .push LR
 @LR
 D=M
 @SP
@@ -24,54 +26,80 @@ A=M
 M=D
 @SP
 M=M+1
-// .pushc 5  
+// .push FP
+@FP
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// .set FP = SP
+@SP
+D=M
+@FP
+M=D
+// .opc SP = SP + 16
+@SP
+D=M
+@16
+D=D+A
+@SP
+M=D
+// .opc p = SP - 1 
+@SP
+D=M
+@1
+D=D-A
+@p
+M=D
+// .psetc p 5 
 @5
 D=A
-@SP
+@p
 A=M
 M=D
-@SP
-M=M+1
-// .call f  
+// .call f 
 @f
 call
-// .pop LR  
-@SP
-M=M-1
-@SP
-A=M
-D=M
-@LR
-M=D
-// .puti r  
+// .puts fmsg 
+@fmsg
+D=A
+@3
+swi
+// .puti r 
 @r
 D=M
 @0
 swi
-// .ret  
-ret
-  
-// .function f  
-(f)
-// .pop n  
+// .fend 
+// .set SP = FP
+@FP
+D=M
+@SP
+M=D
+// .pop FP
 @SP
 M=M-1
 @SP
 A=M
 D=M
-@n
+@FP
 M=D
-// .puts nmsg  
-@nmsg
-D=A
-@3
-swi
-// .puti n  
-@n
+// .pop LR
+@SP
+M=M-1
+@SP
+A=M
 D=M
-@0
-swi
-// .push LR  
+@LR
+M=D
+ret
+ 
+// n:FP-3 r:FP+1 
+// .function f 
+(f)
+// .push LR
 @LR
 D=M
 @SP
@@ -79,84 +107,179 @@ A=M
 M=D
 @SP
 M=M+1
-// .opc t = n == 1  
+// .push FP
+@FP
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// .set FP = SP
+@SP
+D=M
+@FP
+M=D
+// .opc SP = SP + 16
+@SP
+D=M
+@16
+D=D+A
+@SP
+M=D
+// .opc p = FP - 3 
+@FP
+D=M
+@3
+D=D-A
+@p
+M=D
+// .pget p n 
+@p
+A=M
+D=M
+@n
+M=D
+// .puts nmsg 
+@nmsg
+D=A
+@3
+swi
+// .puti n 
+@n
+D=M
+@0
+swi
+ 
+// .opc t = n == 1 
 @n
 D=M
 @1
 D=D==A
 @t
 M=D
-// .if t goto N1  
+// .if t goto N1 
 @t
 D=M
 @N1
 D;JNE
-// .opc t = n - 1  
+// .opc t = n - 1 
 @n
 D=M
 @1
 D=D-A
 @t
 M=D
-// .push t  
+// .opc p = SP - 1 
+@SP
+D=M
+@1
+D=D-A
+@p
+M=D
+// .pset p t 
 @t
 D=M
-@SP
+@p
 A=M
 M=D
-@SP
-M=M+1
-// .call f  
+// .puts tmsg 
+// .puti t 
+ 
+// .call f 
 @f
 call
-// .puts nmsg  
+ 
+// .opc p = FP - 3 
+@FP
+D=M
+@3
+D=D-A
+@p
+M=D
+// .pget p n 
+@p
+A=M
+D=M
+@n
+M=D
+// .puts nmsg 
 @nmsg
 D=A
 @3
 swi
-// .puti n  
+// .puti n 
 @n
 D=M
 @0
 swi
-// .op r = n + n  
-@n
+// .op r = r + n      // f(n) = f(n-1) + n 
+@r
 D=M
 @n
 D=D+M
 @r
 M=D
-// .puts rmsg  
+// .opc p = FP + 1 
+@FP
+D=M
+@1
+D=D+A
+@p
+M=D
+// .pset p r 
+@r
+D=M
+@p
+A=M
+M=D
+// .puts rmsg 
 @rmsg
 D=A
 @3
 swi
-// .puti r  
+// .puti r 
 @r
 D=M
 @0
 swi
-// .goto EXIT  
+// .goto EXIT 
 @EXIT
 0;JMP
-(N1)  
-// .setc r = 1  
+ 
+(N1) 
+// .setc r = 1       // f(1) = 1 
 @1
 D=A
 @r
 M=D
-(EXIT)  
-// .puts rmsg  
+// .puts rmsg 
 @rmsg
 D=A
 @3
 swi
-// .puti r  
+// .puti r 
 @r
 D=M
 @0
 swi
-// .pop LR  
+ 
+(EXIT) 
+// .fend 
+// .set SP = FP
+@FP
+D=M
+@SP
+M=D
+// .pop FP
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@FP
+M=D
+// .pop LR
 @SP
 M=M-1
 @SP
@@ -164,5 +287,4 @@ A=M
 D=M
 @LR
 M=D
-// .ret  
 ret

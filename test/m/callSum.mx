@@ -12,9 +12,10 @@
 .setc n = 100
 .call sum
 .pop LR
-.ret
+ret
 
 (sum)
+.push LR
 .setc  s = 0
 .setc  i = 1
 (L1)
@@ -27,4 +28,5 @@
 .puts msg
 .puti s
 .puts lineEnd
-.ret
+.pop LR
+ret

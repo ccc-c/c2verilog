@@ -1,0 +1,11 @@
+.setc SP = 1000
+.setc a = 3
+.setc b = 5
+.call main
+.puti c
+.exit
+
+.function main
+.op c = a + b
+.fend
+

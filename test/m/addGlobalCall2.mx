@@ -2,15 +2,15 @@
 .call main
 .exit 
 
-.function main
+(main)
 .push LR
 .setc a = 3
 .setc b = 5
 .call add
 .pop LR
 .puti c
-.ret
+ret
 
-.function add
+(add)
 .op  c = a + b
-.ret
+ret

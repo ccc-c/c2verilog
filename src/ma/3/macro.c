@@ -4,6 +4,30 @@
 #include "../../lib/util.h"
 
 Pair macroList[] = {
+  // basic
+  {"op",   "@${3}\nD=M\n@${5}\nD=D${4}M\n@${1}\nM=D"}, // .op m = x + y
+  {"opc",  "@${3}\nD=M\n@${5}\nD=D${4}A\n@${1}\nM=D"}, // .op m = x + 1
+  {"set",  "@${3}\nD=M\n@${1}\nM=D"},   // .set  m = t1
+  {"setc", "@${3}\nD=A\n@${1}\nM=D"},   // .setc m = 5
+  // control
+  {"goto", "@${1}\n0;JMP"},             // goto L
+  {"if",   "@${1}\nD=M\n@${3}\nD;JNE"}, // if e goto L
+  {"ifnot","@${1}\nD=M\n@${3}\nD;JEQ"}, // ifnot e goto L
+  {"exit",  "@255\nswi"},
+  // pointer
+  {"pget",  "@${1}\nA=M\nD=M\n@${2}\nM=D"},   // .pget p v      // v = *p
+  {"pset",  "@${2}\nD=M\n@${1}\nA=M\nM=D"},   // .pset p v      // *p = v
+  {"psetc", "@${2}\nD=A\n@${1}\nA=M\nM=D"},   // .psetc p 5     // *p = 5
+  // stack
+  {"pushc", "@${1}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1"},   // pushc c  *SP=c; SP=SP+1; 
+  {"push",  "@${1}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"},   // push m   *SP=m; SP=SP+1; 
+  {"pop",   "@SP\nM=M-1\n@SP\nA=M\nD=M\n@${1}\nM=D"},   // pop  m   SP=SP-1; m=*SP;
+  // function
+  {"arg",   "// t=SP-${2}\n@${2}\nD=A\n@SP\nD=M-D\n@t\nM=D\n// *t=${1}\n@${1}\nD=M\n@t\nA=M\nM=D"},  // arg m i     *(SP-i) = m
+  {"param", ""}, // param m     ???
+  {"function", "(${1})\n.push LR\n.push FP\n.set FP = SP\n.opc SP = SP + 16"}, // function fname  (fname); PUSH FP; FP=SP // push FP\n@FP\nD=M\n@SP\nM=D\nM=M+1\n// FP=SP\n@SP\nD=M\n@FP\nM=D
+  {"call",  "@${1}\ncall"}, // call f
+  {"fend",   ".set SP = FP\n.pop FP\n.pop LR\nret"},
   // io
   {"puti", "@${1}\nD=M\n@0\nswi"},
   {"putc", "@${1}\nD=M\n@1\nswi"},
@@ -16,31 +40,6 @@ Pair macroList[] = {
   {"subf", "@${1}\nD=A\n@20\nswi"},
   {"mulf", "@${1}\nD=A\n@21\nswi"},
   {"divf", "@${1}\nD=A\n@22\nswi"},
-  // control
-  {"set",  "@${3}\nD=M\n@${1}\nM=D"},   // .set  m = t1
-  {"setc", "@${3}\nD=A\n@${1}\nM=D"},   // .setc m = 5
-  {"goto", "@${1}\n0;JMP"},             // goto L
-  {"if",   "@${1}\nD=M\n@${3}\nD;JNE"}, // if e goto L
-  {"ifnot","@${1}\nD=M\n@${3}\nD;JEQ"}, // ifnot e goto L
-  {"op",   "@${3}\nD=M\n@${5}\nD=D${4}M\n@${1}\nM=D"}, // .op m = x + y
-  {"opc",  "@${3}\nD=M\n@${5}\nD=D${4}A\n@${1}\nM=D"}, // .op m = x + 1
-  // pointer
-  {"*ptr",  "@${1}\nA=M\nD=M\n@${2}\nM=D"},   // .*ptr t v      // v = *t
-  // stack
-  {"pushc", "@${1}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1"},        // pushc c  *SP=c; SP=SP+1; 
-  {"push",  "@${1}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"},        // push m   *SP=m; SP=SP+1; 
-  {"pop",   "@SP\nM=M-1\n@SP\nA=M\nD=M\n@${1}\nM=D"},   // pop  m   SP=SP-1; m=*SP;
-  // function
-  {"arg",   "// t=SP-${2}\n@${2}\nD=A\n@SP\nD=M-D\n@t\nM=D\n// *t=${1}\n@${1}\nD=M\n@t\nA=M\nM=D"},  // arg m i     *(SP-i) = m
-  {"param", ""}, // param m     ???
-  {"function", "(${1})"}, // function fname  (fname); PUSH FP; FP=SP // push FP\n@FP\nD=M\n@SP\nM=D\nM=M+1\n// FP=SP\n@SP\nD=M\n@FP\nM=D
-  {"fend",   "// ret\n@SP\nM=M-1\n@SP\nA=M\nA=M\n0;JMP"}, // fend     = .ret
-  // {"call",  "// setc LR = ${3}\n@${3}\nD=A\n@LR\nM=D\n// .goto f\n@${1}\n0;JMP\n(${3})\n// setc ${2} = RT\n@RT\nD=M\n@${2}\nM=D"},
-  {"call",  "@${1}\ncall"},
-  // .call f t retLabel
-  // {"ret",   "// set RT = ${1}\n@${1}\nD=M\n@RT\nM=D\n// ret\n@LR\nA=M\n0;JMP"}, // .ret id;
-  {"ret",   "ret"},
-  {"exit",  "@255\nswi"},
 };
 
 Map macroMap;
@@ -59,6 +58,25 @@ int expand(char *line, char *code) {
   return 1;
 }
 
+// 使用指標當參數的 DFS 順序，會比較快速與省記憶體！
+// 如此 rExpand(text, p) 必須 改用 strchr 取得第一行 head 與剩餘 tail，
+// 然後 DFS 展開 rExpand(head, p) + rExpand(tail, p)
+void recursiveExpand(char *text, char *p) {
+  if (*text == '\0') { *p = '\0'; return; }
+  char *head = text;
+  char *tail = strchr(text, '\n');
+  *tail++ = '\0';
+  char code[SMAX];
+  int isExpand = expand(head, code);
+  if (isExpand) {
+    recursiveExpand(code, p);
+  } else {
+    strcpy(p, code);
+  }
+  p += strlen(p);
+  recursiveExpand(tail, p);
+}
+
 void macroExpand(char *iFile, FILE *oF) {
   char line[SMAX];
   debug("====== macroExpand ============\n");
@@ -68,8 +86,8 @@ void macroExpand(char *iFile, FILE *oF) {
   sprintf(code, "// =========== iFile: %s ==============\n", iFile);
   fwrite(code, strlen(code), 1, oF);
   while (fgets(line, sizeof(line), iF)) {
-    int isExpand = expand(line, code);
-    if (isExpand) { debug("%s", code); } else debug("%s", line);
+    recursiveExpand(line, code);
+    debug("%s", code);
     fwrite(code, strlen(code), 1, oF);
   }
   fclose(iF);
@@ -87,6 +105,48 @@ int main(int argc, char *argv[]) {
     if (strcmp(argv[i], "-o") == 0) break;
     macroExpand(iFile, oF);
   }
-
+  fclose(oF);
   mapFree(&macroMap);
 }
+
+
+/*
+int recursiveExpand(char *text, char *code) {
+  if (strchr(text, '\n') == NULL) return expand(text, code);
+
+  char tText[SMAX], lineCode[SMAX], expCode[SMAX];
+  char *line[100];
+  int lineTop = 0;
+
+  strcpy(tText, text);
+  char *tline = strtok(tText, "\n");
+  while( tline != NULL ) {
+    line[lineTop++] = tline;
+    tline = strtok(NULL, "\n");
+  }
+
+  int isExpand = 0;
+  int codeIdx = 0;
+  code[0] = '\0';
+  for (int i=0; i<lineTop; i++) {
+    // printf("line[%d]=|%s|\n", i, line[i] );
+    strcpy(lineCode, line[i]);
+    while (1) {
+      if (recursiveExpand(lineCode, expCode)) {
+        strcpy(lineCode, expCode);
+        isExpand = 1;
+      } else {
+        break;
+      }
+    }
+    // printf("lineCode=%s\n", lineCode);
+    strcpy(&code[codeIdx], lineCode);
+    codeIdx += strlen(lineCode);
+    code[codeIdx++] = '\n';
+    // printf("codeIdx=%d\n", codeIdx);
+  }
+  code[codeIdx++] = '\0';
+  // printf("text=%s code=%s\n", text, code);
+  return isExpand;
+}
+*/

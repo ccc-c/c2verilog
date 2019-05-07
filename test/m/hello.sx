@@ -1,12 +1,13 @@
 // =========== iFile: ../test/m/hello.mx ==============
-@main  
-0;JMP  
-  
-(str) "hello ", 10, "world!", 10, "world!", 10, "world!", 0  
-  
-(main)  
-// .puts str  
+@main 
+0;JMP 
+ 
+(str) "hello ", 10, "world!", 10, "world!", 10, "world!", 0 
+ 
+(main) 
+// .puts str 
 @str
 D=A
 @3
 swi
+

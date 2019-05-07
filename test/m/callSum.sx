@@ -1,21 +1,24 @@
 // =========== iFile: ../test/m/callSum.mx ==============
-// .setc SP = 1000  
+// .setc SP = 1000 
 @1000
 D=A
 @SP
 M=D
-// .call main  
+
+// .call main 
 @main
 call
-// .exit  
+
+// .exit 
 @255
 swi
-  
-(msg) "sum=", 0  
-(lineEnd) 13, 10, 0  
-  
-(main)  
-// .push LR  
+
+ 
+(msg) "sum=", 0 
+(lineEnd) 13, 10, 0 
+ 
+(main) 
+// .push LR 
 @LR
 D=M
 @SP
@@ -23,23 +26,28 @@ A=M
 M=D
 @SP
 M=M+1
-// .setc n = 10  
+
+// .setc n = 10 
 @10
 D=A
 @n
 M=D
-// .call sum  
+
+// .call sum 
 @sum
 call
-// .setc n = 100  
+
+// .setc n = 100 
 @100
 D=A
 @n
 M=D
-// .call sum  
+
+// .call sum 
 @sum
 call
-// .pop LR  
+
+// .pop LR 
 @SP
 M=M-1
 @SP
@@ -47,65 +55,92 @@ A=M
 D=M
 @LR
 M=D
-// .ret  
-ret
-  
-(sum)  
-// .setc  s = 0  
+
+ret 
+ 
+(sum) 
+// .push LR 
+@LR
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
+// .setc  s = 0 
 @0
 D=A
 @s
 M=D
-// .setc  i = 1  
+
+// .setc  i = 1 
 @1
 D=A
 @i
 M=D
-(L1)  
-// .op   t = i <= n  
+
+(L1) 
+// .op   t = i <= n 
 @i
 D=M
 @n
 D=D<=M
 @t
 M=D
-// .ifnot t goto L2  
+
+// .ifnot t goto L2 
 @t
 D=M
 @L2
 D;JEQ
-// .op   s = s + i  
+
+// .op   s = s + i 
 @s
 D=M
 @i
 D=D+M
 @s
 M=D
-// .opc  i = i + 1  
+
+// .opc  i = i + 1 
 @i
 D=M
 @1
 D=D+A
 @i
 M=D
-// .goto L1  
+
+// .goto L1 
 @L1
 0;JMP
-(L2)  
-// .puts msg  
+
+(L2) 
+// .puts msg 
 @msg
 D=A
 @3
 swi
-// .puti s  
+
+// .puti s 
 @s
 D=M
 @0
 swi
-// .puts lineEnd  
+
+// .puts lineEnd 
 @lineEnd
 D=A
 @3
 swi
-// .ret  
-ret
+
+// .pop LR 
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@LR
+M=D
+
+ret 

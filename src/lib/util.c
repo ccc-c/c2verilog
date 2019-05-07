@@ -12,10 +12,12 @@ void argHandle(int argc, char *argv[], int argMin, char *msg) {
   char isOut = 0;
   for (int i=0; i<argc; i++) {
     char *a=argv[i];
-    if (isOut) argOut = a;
-    if (*a++ == '-') {
+    if (*a == '-') {
+      a++;
       isFlag[(int) *a] = 1;
       isOut = (*a == 'o')? 1 : 0;
+    } else if (isOut) {
+      argOut = a;
     }
   }
   isDebug = isFlag['d'];

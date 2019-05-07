@@ -67,10 +67,10 @@ c3Run:
 	$(BIN)/cc3 ../test/c/$(file) -d
 	$(BIN)/ma3 ../test/c/$(file).mx -o ../test/c/$(file).sx
 
-m3Run: 
-	$(BIN)/ma3 ../test/m/$(file).mx -o ../test/m/$(file).sx
-	$(BIN)/as3 ../test/m/$(file) -d
-	$(BIN)/vm3 ../test/m/$(file).ox
+m3Run:
+	$(BIN)/ma3 ../test/m/$(file).mx -o ../test/m/$(file).sx -d
+	# $(BIN)/as3 ../test/m/$(file) -d
+	# $(BIN)/vm3 ../test/m/$(file).ox -d
 
 cRun: 
 	$(BIN)/cc3 ../test/c/$(file)
@@ -79,7 +79,7 @@ cRun:
 	$(BIN)/vm3 ../test/c/$(file).ox
 
 mRun: 
-	$(BIN)/ma2 ../test/m/$(file).mx -o ../test/m/$(file).sx
+	$(BIN)/ma3 ../test/m/$(file).mx -o ../test/m/$(file).sx
 	$(BIN)/as3 ../test/m/$(file)
 	$(BIN)/vm3 ../test/m/$(file).ox
 

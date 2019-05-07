@@ -1,0 +1,52 @@
+.setc SP = 1000
+.call main
+.exit
+
+(tmsg) "t=", 0
+(rmsg) "r=", 0
+(nmsg) "n=", 0
+(fmsg) "f(5)=", 0
+
+.function main
+.opc p = SP - 1
+.psetc p 5
+.call f
+.puts fmsg
+.puti r
+.fend
+
+// n:FP-3 r:FP+1
+.function f
+.opc p = FP - 3
+.pget p n
+.puts nmsg
+.puti n
+
+.opc t = n == 1
+.if t goto N1
+.opc t = n - 1
+.opc p = SP - 1
+.pset p t
+// .puts tmsg
+// .puti t
+
+.call f
+
+.opc p = FP - 3
+.pget p n
+.puts nmsg
+.puti n
+.op r = r + n      // f(n) = f(n-1) + n
+.opc p = FP + 1
+.pset p r
+.puts rmsg
+.puti r
+.goto EXIT
+
+(N1)
+.setc r = 1       // f(1) = 1
+.puts rmsg
+.puti r
+
+(EXIT)
+.fend

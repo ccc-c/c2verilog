@@ -1,19 +1,21 @@
 // =========== iFile: ../test/m/addGlobalCall2.mx ==============
-// .setc SP = 1000  
+// .setc SP = 1000 
 @1000
 D=A
 @SP
 M=D
-// .call main  
+
+// .call main 
 @main
 call
-// .exit   
+
+// .exit  
 @255
 swi
-  
-// .function main  
-(main)
-// .push LR  
+
+ 
+(main) 
+// .push LR 
 @LR
 D=M
 @SP
@@ -21,20 +23,24 @@ A=M
 M=D
 @SP
 M=M+1
-// .setc a = 3  
+
+// .setc a = 3 
 @3
 D=A
 @a
 M=D
-// .setc b = 5  
+
+// .setc b = 5 
 @5
 D=A
 @b
 M=D
-// .call add  
+
+// .call add 
 @add
 call
-// .pop LR  
+
+// .pop LR 
 @SP
 M=M-1
 @SP
@@ -42,22 +48,22 @@ A=M
 D=M
 @LR
 M=D
-// .puti c  
+
+// .puti c 
 @c
 D=M
 @0
 swi
-// .ret  
-ret
-  
-// .function add  
-(add)
-// .op  c = a + b  
+
+ret 
+ 
+(add) 
+// .op  c = a + b 
 @a
 D=M
 @b
 D=D+M
 @c
 M=D
-// .ret  
-ret
+
+ret 
