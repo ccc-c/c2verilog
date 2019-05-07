@@ -1,8 +1,15 @@
+.setc SP = 1000
+.call main
+.exit 
+
+.function main
+.push LR
 .setc a = 3
 .setc b = 5
 .call add
+.pop LR
 .puti c
-.exit 
+.ret
 
 .function add
 .op  c = a + b

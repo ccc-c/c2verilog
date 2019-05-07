@@ -9,23 +9,11 @@ M=D
 D=A
 @b
 M=D
-// .call add t L1  
-// setc LR = L1
-@L1
-D=A
-@LR
-M=D
-// .goto f
+// .call add  
 @add
-0;JMP
-(L1)
-// setc t = RT
-@RT
-D=M
-@t
-M=D
-// .puti t  
-@t
+call
+// .puti c  
+@c
 D=M
 @0
 swi
@@ -35,20 +23,12 @@ swi
   
 // .function add  
 (add)
-// .op  c = a + b   
+// .op  c = a + b  
 @a
 D=M
 @b
 D=D+M
 @c
 M=D
-// .ret c  
-// set RT = c
-@c
-D=M
-@RT
-M=D
-// ret
-@LR
-A=M
-0;JMP
+// .ret  
+ret

@@ -1,7 +1,0 @@
-.setc a = 3
-.set  b = 5
-.arg  a 0
-.arg  b 1
-.call add t4 L1
-.set  c = t4
-.puti c

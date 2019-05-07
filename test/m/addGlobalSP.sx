@@ -15,7 +15,7 @@ D=A
 @b
 M=D
 // .call add  
-// .pushc L1  
+// .pushc L1     // 比較 .setc LR = L1  
 @L1
 D=A
 @SP
@@ -23,7 +23,6 @@ A=M
 M=D
 @SP
 M=M+1
-// .setc LR = L1  
 // .goto add  
 @add
 0;JMP
@@ -48,7 +47,7 @@ D=D+M
 @c
 M=D
 // ret  
-// .pop retAddress  
+// .pop retAddress   
 @SP
 M=M-1
 @SP
@@ -56,9 +55,6 @@ A=M
 D=M
 @retAddress
 M=D
-@retAddress  
+@retAddress  // 比較 @LR  
 A=M  
 0;JMP  
-// @LR  
-// A=M  
-// 0;JMP

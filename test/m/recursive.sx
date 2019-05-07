@@ -1,0 +1,168 @@
+// =========== iFile: ../test/m/recursive.mx ==============
+// .setc SP = 1000  
+@1000
+D=A
+@SP
+M=D
+// .call main  
+@main
+call
+// .exit  
+@255
+swi
+  
+(rmsg) "r=", 0  
+(nmsg) "n=", 0  
+  
+// .function main  
+(main)
+// .push LR  
+@LR
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// .pushc 5  
+@5
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// .call f  
+@f
+call
+// .pop LR  
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@LR
+M=D
+// .puti r  
+@r
+D=M
+@0
+swi
+// .ret  
+ret
+  
+// .function f  
+(f)
+// .pop n  
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@n
+M=D
+// .puts nmsg  
+@nmsg
+D=A
+@3
+swi
+// .puti n  
+@n
+D=M
+@0
+swi
+// .push LR  
+@LR
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// .opc t = n == 1  
+@n
+D=M
+@1
+D=D==A
+@t
+M=D
+// .if t goto N1  
+@t
+D=M
+@N1
+D;JNE
+// .opc t = n - 1  
+@n
+D=M
+@1
+D=D-A
+@t
+M=D
+// .push t  
+@t
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// .call f  
+@f
+call
+// .puts nmsg  
+@nmsg
+D=A
+@3
+swi
+// .puti n  
+@n
+D=M
+@0
+swi
+// .op r = n + n  
+@n
+D=M
+@n
+D=D+M
+@r
+M=D
+// .puts rmsg  
+@rmsg
+D=A
+@3
+swi
+// .puti r  
+@r
+D=M
+@0
+swi
+// .goto EXIT  
+@EXIT
+0;JMP
+(N1)  
+// .setc r = 1  
+@1
+D=A
+@r
+M=D
+(EXIT)  
+// .puts rmsg  
+@rmsg
+D=A
+@3
+swi
+// .puti r  
+@r
+D=M
+@0
+swi
+// .pop LR  
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@LR
+M=D
+// .ret  
+ret

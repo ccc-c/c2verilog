@@ -24,6 +24,8 @@ Pair macroList[] = {
   {"ifnot","@${1}\nD=M\n@${3}\nD;JEQ"}, // ifnot e goto L
   {"op",   "@${3}\nD=M\n@${5}\nD=D${4}M\n@${1}\nM=D"}, // .op m = x + y
   {"opc",  "@${3}\nD=M\n@${5}\nD=D${4}A\n@${1}\nM=D"}, // .op m = x + 1
+  // pointer
+  {"*ptr",  "@${1}\nA=M\nD=M\n@${2}\nM=D"},   // .*ptr t v      // v = *t
   // stack
   {"pushc", "@${1}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1"},        // pushc c  *SP=c; SP=SP+1; 
   {"push",  "@${1}\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1"},        // push m   *SP=m; SP=SP+1; 
@@ -33,9 +35,11 @@ Pair macroList[] = {
   {"param", ""}, // param m     ???
   {"function", "(${1})"}, // function fname  (fname); PUSH FP; FP=SP // push FP\n@FP\nD=M\n@SP\nM=D\nM=M+1\n// FP=SP\n@SP\nD=M\n@FP\nM=D
   {"fend",   "// ret\n@SP\nM=M-1\n@SP\nA=M\nA=M\n0;JMP"}, // fend     = .ret
-  {"call",  "// setc LR = ${3}\n@${3}\nD=A\n@LR\nM=D\n// .goto f\n@${1}\n0;JMP\n(${3})\n// setc ${2} = RT\n@RT\nD=M\n@${2}\nM=D"},
+  // {"call",  "// setc LR = ${3}\n@${3}\nD=A\n@LR\nM=D\n// .goto f\n@${1}\n0;JMP\n(${3})\n// setc ${2} = RT\n@RT\nD=M\n@${2}\nM=D"},
+  {"call",  "@${1}\ncall"},
   // .call f t retLabel
-  {"ret",   "// set RT = ${1}\n@${1}\nD=M\n@RT\nM=D\n// ret\n@LR\nA=M\n0;JMP"}, // .ret id;
+  // {"ret",   "// set RT = ${1}\n@${1}\nD=M\n@RT\nM=D\n// ret\n@LR\nA=M\n0;JMP"}, // .ret id;
+  {"ret",   "ret"},
   {"exit",  "@255\nswi"},
 };
 

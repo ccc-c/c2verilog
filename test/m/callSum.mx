@@ -1,0 +1,30 @@
+.setc SP = 1000
+.call main
+.exit
+
+(msg) "sum=", 0
+(lineEnd) 13, 10, 0
+
+(main)
+.push LR
+.setc n = 10
+.call sum
+.setc n = 100
+.call sum
+.pop LR
+.ret
+
+(sum)
+.setc  s = 0
+.setc  i = 1
+(L1)
+.op   t = i <= n
+.ifnot t goto L2
+.op   s = s + i
+.opc  i = i + 1
+.goto L1
+(L2)
+.puts msg
+.puti s
+.puts lineEnd
+.ret
